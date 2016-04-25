@@ -2,5 +2,14 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "mitmarket": {
+    "host": "localhost",
+    "port": 27017,
+    "database": "mitmarket",
+    "password": "",
+    "name": "mitmarket",
+    "user": "",
+    "connector": "mongodb"
   }
 }
