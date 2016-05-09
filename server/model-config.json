@@ -14,22 +14,27 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "mitmarket",
+    "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "mitmarket",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "mitmarket",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "mitmarket",
     "public": false
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "mitmarket",
     "public": false
+  },
+  "user": {
+    "dataSource": "mitmarket",
+    "public": true
   }
 }
