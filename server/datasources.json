@@ -3,12 +3,12 @@
     "name": "db",
     "connector": "memory"
   },
-  "mitmarket": {
+  "mitmart": {
     "host": "localhost",
     "port": 27017,
-    "database": "mitmarket",
+    "database": "mitmart",
     "password": "",
-    "name": "mitmarket",
+    "name": "mitmart",
     "user": "",
     "connector": "mongodb"
   }

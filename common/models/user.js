@@ -1,25 +1,18 @@
-module.exports = function (user) {
-	// it cannot override parent message, so i validate manually
-	// var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+"use strict"
+module.exports = (user) => {
 
-	// user.validatesPresenceOf('username', 'email', 'password')
-	// user.validatesLengthOf('password', { min: 5, message: { min: 'Minimum Password length is 5' } });
-	// user.validatesUniquenessOf('email', { message: 'Email address already exists' });
-	// user.validatesUniquenessOf('username', { message: 'Username already exists' });
-	// user.validatesFormatOf('email', {with: regex, message: 'Invalid email format'});
-
-	user.beforeRemote('create', function (context, userData, next) {
+	user.beforeRemote('create', (context, userData, next) => {
 		validateInstance(context.req.body, next);
 		next();
 	})
 
 	function validateInstance(body, next) {
-		var messages = new Object;
-		var codes = new Object;
-		var message;
-		var code;
+		const messages = new Object;
+		const codes = new Object;
+		let message;
+		let code;
 		
-		var isValid = true;
+		let isValid = true;
 		
 
 		if (typeof (body.username) == 'undefined' || body.username == '') {
@@ -43,7 +36,7 @@ module.exports = function (user) {
 			messages.email.push(message);
 			isValid = false;
 		} else {
-			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (!re.test(body.email)) {
 				codes.email = [];
 				code = 'INVALID_EMAIL_FORMAT'
@@ -68,7 +61,7 @@ module.exports = function (user) {
 		}
 
 		if (!isValid) {
-			var error = new Error();
+			let error = new Error();
 			error.name = 'ValidationError';
 			error.message = "The model instance is not valid. See error object 'details' property for more info.";
 			error.status = 422;
