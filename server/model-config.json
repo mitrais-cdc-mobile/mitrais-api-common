@@ -35,6 +35,13 @@
   },
   "user": {
     "dataSource": "mitmart",
-    "public": true
+    "public": true,
+    "options": {
+      "emailVerificationRequired": true
+    }
+  },
+  "Email": {
+    "dataSource": "elasticemail",
+    "public": false
   }
 }

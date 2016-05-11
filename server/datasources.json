@@ -11,5 +11,21 @@
     "name": "mitmart",
     "user": "",
     "connector": "mongodb"
+  },
+  "elasticemail": {
+    "name": "elasticemail",
+    "connector": "mail",
+    "transports": [
+      {
+        "type": "smtp",
+        "host": "smtp.elasticemail.com",
+        "secureConnection": false,
+        "port": 2525,
+        "auth": {
+          "user": "mitraiscdcmobiledev@gmail.com",
+          "pass": "a6c7493c-13f4-4121-a300-f120a99f0f79"
+        }
+      }
+    ]
   }
 }

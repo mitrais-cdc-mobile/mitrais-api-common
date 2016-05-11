@@ -159,7 +159,8 @@ describe('Sign Up', () => {
             });
     });
 
-    it('Return OK when all Data is Valid', (done) => {
+    it('Return OK when all Data is Valid', function(done) {
+        this.timeout(10000);
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')

@@ -4,9 +4,9 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node .",
-    "pretest": "slc run -d",
+    "pretest": "export NODE_ENV=testing && slc run -d",
     "test": "mocha --reporter nyan",
-    "posttest": "nsp check && kill $(ps -ax | grep 'sl-run.js --no-detach server/server.js' | awk '{print $1}')"
+    "posttest": "nsp check && kill $(ps -ax | grep 'sl-run.js --no-detach server/server.js' | awk '{print $1}') && unset NODE_ENV"
   },
   "dependencies": {
     "compression": "^1.0.3",
@@ -15,9 +15,10 @@
     "loopback": "^2.22.0",
     "loopback-boot": "^2.6.5",
     "loopback-component-explorer": "^2.4.0",
+    "loopback-connector-mongodb": "~1.13.3",
     "loopback-datasource-juggler": "^2.39.0",
-    "serve-favicon": "^2.0.1",
-    "loopback-connector-mongodb": "~1.13.3"
+    "nodemailer": "^2.3.2",
+    "serve-favicon": "^2.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
