@@ -4,8 +4,9 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node .",
-    "pretest": "jshint .",
-    "posttest": "nsp check"
+    "pretest": "slc run -d",
+    "test": "mocha --reporter nyan",
+    "posttest": "nsp check && kill $(ps -ax | grep 'sl-run.js --no-detach server/server.js' | awk '{print $1}')"
   },
   "dependencies": {
     "compression": "^1.0.3",
