@@ -2,14 +2,14 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const chaiAsPromised = require('chai-as-promised');
-const expect = chai.expect;
-const request = chai.request;
-const apiAddress = 'http://localhost/api';
-
-const app = require('../server/server')
-
 chai.use(chaiHttp);
 chai.use(chaiAsPromised);
+
+const apiAddress = 'http://localhost/api';
+const app = require('../server/server')
+
+const expect = chai.expect;
+const request = chai.request;
 
 describe('Sign Up', () => {
     before(() => {
@@ -33,7 +33,7 @@ describe('Sign Up', () => {
             });
     });
 
-    it('Empty Username Return Error', (done) => {
+    it('Return error when Username is Empty', (done) => {
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
@@ -54,7 +54,7 @@ describe('Sign Up', () => {
             });
     });
 
-    it('Empty Email Return Error', (done) => {
+    it('Return error when Email is Empty', (done) => {
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
@@ -75,7 +75,7 @@ describe('Sign Up', () => {
             });
     });
 
-    it('Empty Password Return Error', (done) => {
+    it('Return error when Password is Empty', (done) => {
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
@@ -96,7 +96,7 @@ describe('Sign Up', () => {
             });
     });
 
-    it('Invalid Email Format Return Error', (done) => {
+    it('Return error when Email Format is Invalid', (done) => {
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
@@ -117,7 +117,7 @@ describe('Sign Up', () => {
             });
     });
 
-    it('Username Already Exist Return Error', (done) => {
+    it('Return error when Username is already Exist', (done) => {
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
@@ -138,7 +138,7 @@ describe('Sign Up', () => {
             });
     });
 
-    it('Email Already Exist Return Error', (done) => {
+    it('Return error when Email already Exist', (done) => {
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
@@ -159,7 +159,7 @@ describe('Sign Up', () => {
             });
     });
 
-    it('Valid Email Format Success', (done) => {
+    it('Return OK when all Data is Valid', (done) => {
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
