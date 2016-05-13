@@ -3,6 +3,9 @@
 module.exports = (user) => {
 	const userHelper = require('../utility/user-helper');
 	
+    // Disable remote methods
+    userHelper.disableRemoteMethods(user);    
+    
     /**
      * check whether the request is valid or not. 
      */
