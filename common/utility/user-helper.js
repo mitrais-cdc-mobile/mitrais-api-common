@@ -94,6 +94,21 @@ class UserHelper {
            return next();
        });
     };
+	
+	/**
+	 * Disable remote methods
+	 */
+	static disableRemoteMethods(userModel){
+		// Disable remote methods that related to access tokens. 
+		// Why? Because access token is something that should be managed from within the backend.
+		userModel.disableRemoteMethod('__count__accessTokens', false);
+		userModel.disableRemoteMethod('__create__accessTokens', false);
+		userModel.disableRemoteMethod('__delete__accessTokens', false);
+		userModel.disableRemoteMethod('__destroyById__accessTokens', false);
+		userModel.disableRemoteMethod('__findById__accessTokens', false);
+		userModel.disableRemoteMethod('__get__accessTokens', false);
+		userModel.disableRemoteMethod('__updateById__accessTokens', false);
+	}	
 };
 
 module.exports = UserHelper;
