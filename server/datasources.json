@@ -12,6 +12,15 @@
     "user": "",
     "connector": "mongodb"
   },
+  "mitmart-testing": {
+    "host": "localhost",
+    "port": 27017,
+    "database": "mitmart-testing",
+    "password": "",
+    "name": "mitmart-testing",
+    "user": "",
+    "connector": "mongodb"
+  },  
   "elasticemail": {
     "name": "elasticemail",
     "connector": "mail",

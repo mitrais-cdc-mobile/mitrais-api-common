@@ -4,9 +4,11 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node .",
-    "pretest": "export NODE_ENV=testing && slc run -d",
-    "test": "mocha --reporter spec --reporter nyan",               
-    "posttest": "nsp check && kill $(ps -ax | grep 'sl-run.js --no-detach .' | awk '{print $1}') && unset NODE_ENV"
+    "setenv": "export NODE_ENV=testing",
+    "pretest": "npm run setenv && slc run -d",
+    "test": "mocha --reporter spec --reporter nyan",
+    "unsetenv": "unset NODE_ENV",               
+    "posttest": "nsp check && kill $(ps -ax | grep 'sl-run.js --no-detach .' | awk '{print $1}') && npm run unsetenv"
   },
   "dependencies": {
     "app-root-path": "^1.0.0",
