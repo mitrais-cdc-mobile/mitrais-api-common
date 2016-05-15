@@ -1,0 +1,30 @@
+
+{
+  "User": {
+    "dataSource": "mitmart-testing",
+    "public": false
+  },
+  "AccessToken": {
+    "dataSource": "mitmart-testing",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "mitmart-testing",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "mitmart-testing",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "mitmart-testing",
+    "public": false
+  },
+  "user": {
+    "dataSource": "mitmart-testing",
+    "public": true,
+    "options": {
+      "emailVerificationRequired": true
+    }
+  }
+}
