@@ -18,13 +18,10 @@ module.exports = (user) => {
      */
     user.afterRemote('create', (context, userInstance, next) => {
         if ( (userInstance.__data) && (userInstance.__data.email) ){
-            // By pass verification if $NODE_ENV = testing
-            if (process.env.NODE_ENV !== 'testing'){
-                // If not, send email verification
-                userHelper.sendVerificationEmail(userInstance, next);                
-            }
-            else next();
+            userHelper.sendVerificationEmail(userInstance, next);                
         }
-        else next();
+        else { 
+            next()
+        };
 	});		
 };
