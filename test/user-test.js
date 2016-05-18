@@ -211,15 +211,20 @@ describe('Sign Up', function () {
 /**
  * Tests suite related to access security
  */
-describe.skip('Access security', function () {
+describe('Access security', function () {
     let testUserId = "";
 
-    before(() => {
+    before((done) => {
+        this.timeout(10000);
         testHelper.createTestUserAccount(TEST_USER_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD)
             .then(id => {
                 testUserId = id;
+                done();
             })
-            .catch(err => console.log(`[ERROR] - In before method. Error = ${err}`));
+            .catch(err => {
+                console.log(`[ERROR] - In before method. Error = ${err}`)
+                done();
+            });
     });
 
     after(() => {
@@ -303,7 +308,7 @@ describe.skip('Access security', function () {
     });
 
     it("returns error when Authenticated user try to get other user records that does not belong to the user.", function (done) {
-        this.timeout(10000);
+        this.timeout(20000);
         const SecondUserMail = "mitraiscdcmobildev1@gmail.com";
 
         // Do the test when 2nd test user has signed in
@@ -366,7 +371,7 @@ describe.skip('Access security', function () {
     });
 
     it("returns ok when Authenticated user retrieve & updates their own User record", function (done) {
-        this.timeout(10000);
+        this.timeout(20000);
         const SecondUserMail = "mitraiscdcmobildev1@gmail.com";
 
         // Do the test when 2nd test user has signed in
@@ -445,7 +450,7 @@ describe.skip('Access security', function () {
     });
 
     it("returns error when Authenticated user delete their own User record", function (done) {
-        this.timeout(10000);
+        this.timeout(20000);
         const SecondUserMail = "mitraiscdcmobildev1@gmail.com";
 
         // Do the test when 2nd test user has signed in
@@ -514,11 +519,11 @@ describe('Sign In', function () {
     const TEST_SIGNIN_USER_NAME = 'signin_username';
     const TEST_SIGNIN_USER_EMAIL = 'signin_useremail@gmail.com';
     const TEST_SIGNIN_USER_PASSWORD = 'signin_userpassword';
-    
+
     const TEST_SIGNIN_VERIFIED_USER_NAME = 'signin_verified_username';
     const TEST_SIGNIN_VERIFIED_USER_EMAIL = 'signin_verified_useremail@gmail.com';
     const TEST_SIGNIN_VERIFIED_USER_PASSWORD = 'signin_verified_userpassword';
-    
+
     this.timeout(20000);
     before((done) => {
         // unverified user
@@ -700,11 +705,11 @@ describe('Sign In', function () {
  */
 describe('Sign Out', function () {
     this.timeout(20000);
-    
+
     const TEST_SIGNOUT_VERIFIED_USER_NAME = 'signout_verified_username';
     const TEST_SIGNOUT_VERIFIED_USER_EMAIL = 'signout_verified_useremail@gmail.com';
     const TEST_SIGNOUT_VERIFIED_USER_PASSWORD = 'signout_verified_userpassword';
-    
+
     let accessToken = '';
 
     before((done) => {
