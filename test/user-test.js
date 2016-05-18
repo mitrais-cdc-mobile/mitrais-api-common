@@ -211,7 +211,7 @@ describe('Sign Up', function () {
 /**
  * Tests suite related to access security
  */
-describe('Access security', function () {
+describe.skip('Access security', function () {
     let testUserId = "";
 
     before(() => {
