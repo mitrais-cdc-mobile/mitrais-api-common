@@ -26,15 +26,23 @@ const TEST_VERIFIED_USER_PASSWORD = 'verifiedmitmart123';
 describe('Sign Up', function () {
     this.timeout(20000);
 
+    const TEST_SIGNUP_USER_NAME = 'signup_username';
+    const TEST_SIGNUP_USER_EMAIL = 'signup_useremail@gmail.com';
+    const TEST_SIGNUP_USER_PASSWORD = 'signup_userpassword';
+
+    const TEST_SIGNUP_USER_NAME2 = 'signup_username2';
+    const TEST_SIGNUP_USER_EMAIL2 = 'signup_useremail2@gmail.com';
+    const TEST_SIGNUP_USER_PASSWORD2 = 'signup_userpassword2';
+
     before(() => {
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: TEST_USER_EMAIL,
-                password: TEST_USER_PASSWORD,
-                username: TEST_USER_NAME
+                email: TEST_SIGNUP_USER_EMAIL,
+                password: TEST_SIGNUP_USER_PASSWORD,
+                username: TEST_SIGNUP_USER_NAME
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -47,8 +55,8 @@ describe('Sign Up', function () {
     });
 
     after(() => {
-        testHelper.disposeTestUserAccount(TEST_USER_NAME);
-        testHelper.disposeTestUserAccount(TEST_USER_NAME1);
+        testHelper.disposeTestUserAccount(TEST_SIGNUP_USER_NAME);
+        testHelper.disposeTestUserAccount(TEST_SIGNUP_USER_NAME2);
     });
 
     it('Return error when Username is Empty', (done) => {
@@ -57,8 +65,8 @@ describe('Sign Up', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: 'user1@gmail.com',
-                password: 'user1',
+                email: TEST_SIGNUP_USER_EMAIL,
+                password: TEST_SIGNUP_USER_PASSWORD,
                 username: ''
             })
             .then(res => {
@@ -79,8 +87,8 @@ describe('Sign Up', function () {
             .set('Accept', 'application/json')
             .send({
                 email: '',
-                password: 'user1',
-                username: 'user1'
+                password: TEST_SIGNUP_USER_PASSWORD,
+                username: TEST_SIGNUP_USER_NAME
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -99,9 +107,9 @@ describe('Sign Up', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: 'user1@gmail.com',
+                email: TEST_SIGNUP_USER_EMAIL,
                 password: '',
-                username: 'user1'
+                username: TEST_SIGNUP_USER_NAME
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -120,9 +128,9 @@ describe('Sign Up', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: 'user1',
-                password: 'user1',
-                username: 'user1'
+                email: 'USERNAME',
+                password: TEST_SIGNUP_USER_PASSWORD,
+                username: TEST_SIGNUP_USER_NAME
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -141,9 +149,9 @@ describe('Sign Up', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: 'userTest1@gmail.com',
-                password: 'userTest1',
-                username: 'userTest'
+                email: "USEREMAIL@GMAIL.COM",
+                password: TEST_SIGNUP_USER_PASSWORD,
+                username: TEST_SIGNUP_USER_NAME
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -162,9 +170,9 @@ describe('Sign Up', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: 'userTest@gmail.com',
-                password: 'userTest1',
-                username: 'userTest1'
+                email: TEST_SIGNUP_USER_EMAIL,
+                password: TEST_SIGNUP_USER_PASSWORD,
+                username: 'USERNAME'
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -183,9 +191,9 @@ describe('Sign Up', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: 'mitmartvalidemail@gmail.com',
-                password: 'mitmartpassword',
-                username: TEST_USER_NAME1
+                email: TEST_SIGNUP_USER_EMAIL2,
+                password: TEST_SIGNUP_USER_PASSWORD2,
+                username: TEST_SIGNUP_USER_NAME2
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -503,6 +511,14 @@ describe('Access security', function () {
  * Tests suite related to Sign In's feature.
  */
 describe('Sign In', function () {
+    const TEST_SIGNIN_USER_NAME = 'signin_username';
+    const TEST_SIGNIN_USER_EMAIL = 'signin_useremail@gmail.com';
+    const TEST_SIGNIN_USER_PASSWORD = 'signin_userpassword';
+    
+    const TEST_SIGNIN_VERIFIED_USER_NAME = 'signin_verified_username';
+    const TEST_SIGNIN_VERIFIED_USER_EMAIL = 'signin_verified_useremail@gmail.com';
+    const TEST_SIGNIN_VERIFIED_USER_PASSWORD = 'signin_verified_userpassword';
+    
     this.timeout(20000);
     before((done) => {
         // unverified user
@@ -511,9 +527,9 @@ describe('Sign In', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: TEST_USER_EMAIL,
-                password: TEST_USER_PASSWORD,
-                username: TEST_USER_NAME
+                email: TEST_SIGNIN_USER_EMAIL,
+                password: TEST_SIGNIN_USER_PASSWORD,
+                username: TEST_SIGNIN_USER_NAME
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -529,9 +545,9 @@ describe('Sign In', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                username: TEST_VERIFIED_USER_NAME,
-                email: TEST_VERIFIED_USER_EMAIL,
-                password: TEST_VERIFIED_USER_PASSWORD
+                username: TEST_SIGNIN_VERIFIED_USER_NAME,
+                email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
+                password: TEST_SIGNIN_VERIFIED_USER_PASSWORD
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -554,8 +570,8 @@ describe('Sign In', function () {
     });
 
     after(() => {
-        testHelper.disposeTestUserAccount(TEST_USER_NAME);
-        testHelper.disposeTestUserAccount(TEST_VERIFIED_USER_NAME);
+        testHelper.disposeTestUserAccount(TEST_SIGNIN_USER_NAME);
+        testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
     });
 
     it('Return error when using empty username and password', (done) => {
@@ -565,7 +581,7 @@ describe('Sign In', function () {
             .set('Accept', 'application/json')
             .send({
                 username: '',
-                password: TEST_USER_PASSWORD
+                password: TEST_SIGNIN_USER_PASSWORD
             })
             .then(res => {
                 expect(res).to.have.status(400);
@@ -585,7 +601,7 @@ describe('Sign In', function () {
             .set('Accept', 'application/json')
             .send({
                 email: '',
-                password: TEST_USER_PASSWORD
+                password: TEST_SIGNIN_USER_PASSWORD
             })
             .then(res => {
                 expect(res).to.have.status(400);
@@ -604,8 +620,8 @@ describe('Sign In', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: TEST_USER_EMAIL,
-                password: TEST_USER_PASSWORD
+                email: TEST_SIGNIN_USER_EMAIL,
+                password: TEST_SIGNIN_USER_PASSWORD
             })
             .then(res => {
                 expect(res).to.have.status(401);
@@ -624,8 +640,8 @@ describe('Sign In', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                username: TEST_USER_NAME,
-                password: TEST_USER_PASSWORD
+                username: TEST_SIGNIN_USER_NAME,
+                password: TEST_SIGNIN_USER_PASSWORD
             })
             .then(res => {
                 expect(res).to.have.status(401);
@@ -644,8 +660,8 @@ describe('Sign In', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                email: TEST_VERIFIED_USER_EMAIL,
-                password: TEST_VERIFIED_USER_PASSWORD
+                email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
+                password: TEST_SIGNIN_VERIFIED_USER_PASSWORD
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -664,8 +680,8 @@ describe('Sign In', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                username: TEST_VERIFIED_USER_NAME,
-                password: TEST_VERIFIED_USER_PASSWORD
+                username: TEST_SIGNIN_VERIFIED_USER_NAME,
+                password: TEST_SIGNIN_VERIFIED_USER_PASSWORD
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -684,11 +700,16 @@ describe('Sign In', function () {
  */
 describe('Sign Out', function () {
     this.timeout(20000);
+    
+    const TEST_SIGNOUT_VERIFIED_USER_NAME = 'signout_verified_username';
+    const TEST_SIGNOUT_VERIFIED_USER_EMAIL = 'signout_verified_useremail@gmail.com';
+    const TEST_SIGNOUT_VERIFIED_USER_PASSWORD = 'signout_verified_userpassword';
+    
     let accessToken = '';
 
     before((done) => {
         const doLogin = (done) => {
-            testHelper.loginTestUserAccount(TEST_VERIFIED_USER_NAME, TEST_VERIFIED_USER_PASSWORD)
+            testHelper.loginTestUserAccount(TEST_SIGNOUT_VERIFIED_USER_NAME, TEST_SIGNOUT_VERIFIED_USER_PASSWORD)
                 .then(token => {
                     accessToken = token;
                     done();
@@ -705,9 +726,9 @@ describe('Sign Out', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                username: TEST_VERIFIED_USER_NAME,
-                email: TEST_VERIFIED_USER_EMAIL,
-                password: TEST_VERIFIED_USER_PASSWORD
+                username: TEST_SIGNOUT_VERIFIED_USER_NAME,
+                email: TEST_SIGNOUT_VERIFIED_USER_EMAIL,
+                password: TEST_SIGNOUT_VERIFIED_USER_PASSWORD
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -728,7 +749,7 @@ describe('Sign Out', function () {
     });
 
     after(() => {
-        testHelper.disposeTestUserAccount(TEST_VERIFIED_USER_NAME);
+        testHelper.disposeTestUserAccount(TEST_SIGNOUT_VERIFIED_USER_NAME);
     });
 
 
