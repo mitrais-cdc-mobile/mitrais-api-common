@@ -197,8 +197,8 @@ describe('Sign Up', function () {
             })
             .then(res => {
                 expect(res).to.have.status(200);
-                expect(res.body.email).to.equal('mitmartvalidemail@gmail.com');
-                expect(res.body.username).to.equal(TEST_USER_NAME1);
+                expect(res.body.email).to.equal(TEST_SIGNUP_USER_EMAIL2);
+                expect(res.body.username).to.equal(TEST_SIGNUP_USER_NAME2);
                 expect(res.body.id).exist;
                 done();
             })
