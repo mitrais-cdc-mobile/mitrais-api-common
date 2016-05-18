@@ -1,17 +1,18 @@
 "use strict";
 
+const app = require('../../server/server');
 class UserHelper {
     /**
      * Validate user's fields
      */
-    static validateFields(user, next){
+    static validateFields(user, next) {
 		const messages = new Object;
 		const codes = new Object;
 		let message;
 		let code;
-		
+
 		let isValid = true;
-		
+
 		if (typeof (user.username) == 'undefined' || user.username == '') {
 			codes.username = [];
 			code = 'USERNAME_IS_EMPTY';
@@ -57,6 +58,17 @@ class UserHelper {
 			isValid = false;
 		}
 
+		if (typeof (user.accountType) == 'undefined' || user.accountType == '') {
+			codes.accountType = [];
+			code = 'ACCOUNT_TYPE_IS_EMPTY';
+			codes.accountType.push(code);
+
+			messages.accountType = [];
+			message = 'Account Type is required';
+			messages.accountType.push(message);
+			isValid = false;
+		}
+
 		if (!isValid) {
 			let error = new Error();
 			error.name = 'ValidationError';
@@ -68,14 +80,14 @@ class UserHelper {
 
 			return next(error);
 		}
-        
+
         return next();
     };
-    
+
     /**
      * Send verification email
      */
-    static sendVerificationEmail(userInstance, next ){
+    static sendVerificationEmail(userInstance, next) {
         //set the options of the email     
         const options = {
             type: 'email',
@@ -84,21 +96,56 @@ class UserHelper {
             subject: 'Thank you for registering.',
             redirect: '/verified'
         };
-        
-       // Call userInstance's verify method
-       userInstance.verify(options, (err, response)=>{
-           if (err) return next(err);
-           
-           console.log('[DEBUG] - Verification email has been sent: ', response);
-           
-           return next();
-       });
+
+		// Call userInstance's verify method
+		userInstance.verify(options, (err, response) => {
+			if (err) return next(err);
+
+			console.log('[DEBUG] - Verification email has been sent: ', response);
+
+			return next();
+		});
     };
-	
+
+	/**
+	 * Auto verify email
+	 */
+	static autoVerify(userInstance, next) {
+		userInstance.verificationToken = undefined;
+		userInstance.emailVerified = true;
+		userInstance.save(function (err) {
+            if (err) {
+				return next(err);
+            }
+		});
+		return next();
+	};
+
+	/**
+	 * Send Registration Result
+	 */
+	static sendMerchantRegistrationResult(context, userInstance, next) {
+		const ttl = 1209600; //two week
+		let userModel = app.models.User;
+		userModel.findOne({ where: { email: userInstance.__data.email } }, function (err, user) {
+			if (err) {
+				return cb(err);
+			}
+			user.accessTokens.create({ ttl: ttl }, function (err, accessToken) {
+				if (err) {
+					return next(err);
+				}
+				context.result.accessToken = accessToken.id;
+				return next();
+			});
+		});
+
+	}
+
 	/**
 	 * Disable remote methods
 	 */
-	static disableRemoteMethods(userModel){
+	static disableRemoteMethods(userModel) {
 		// Disable remote methods that related to access tokens. 
 		// Why? Because access token is something that should be managed from within the backend.
 		userModel.disableRemoteMethod('__count__accessTokens', false);
@@ -108,7 +155,7 @@ class UserHelper {
 		userModel.disableRemoteMethod('__findById__accessTokens', false);
 		userModel.disableRemoteMethod('__get__accessTokens', false);
 		userModel.disableRemoteMethod('__updateById__accessTokens', false);
-	}	
+	}
 };
 
 module.exports = UserHelper;
