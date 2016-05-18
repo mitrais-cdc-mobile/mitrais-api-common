@@ -5,20 +5,15 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiHttp);
 chai.use(chaiAsPromised);
 
-const apiAddress = 'http://localhost:3001/api';
+const apiAddress = 'http://localhost:3000/api';
 const testHelper = require('./user-test-helpers');
 
 const expect = chai.expect;
 const request = chai.request;
 
 const TEST_USER_NAME = 'userTest';
-const TEST_USER_NAME1 = 'mitmartusername';
 const TEST_USER_PASSWORD = 'username';
 const TEST_USER_EMAIL = 'userTest@gmail.com';
-
-const TEST_VERIFIED_USER_NAME = 'verifiedmitmart';
-const TEST_VERIFIED_USER_EMAIL = 'verifiedmitmart@gmail.com';
-const TEST_VERIFIED_USER_PASSWORD = 'verifiedmitmart123';
 
 /**
  * Tests suite related to Sign Up's feature.
@@ -50,8 +45,6 @@ describe('Sign Up', function () {
             })
             .catch(err => {
             });
-
-        // testHelper.createTestUserAccount(TEST_USER_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD);    
     });
 
     after(() => {
