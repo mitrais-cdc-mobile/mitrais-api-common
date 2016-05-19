@@ -5,7 +5,7 @@
   "options": {
     "validateUpsert": true
   },
-  "mixins":{
+  "mixins": {
     "ClearBaseAcls": true
   },
   "properties": {
@@ -29,14 +29,12 @@
       "principalId": "$unauthenticated",
       "permission": "DENY"
     },
-
     {
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "create"
     },
-
     {
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -49,36 +47,31 @@
       "permission": "ALLOW",
       "property": "resendVerificationCode"
     },
-
     {
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "confirm"
     },
-
     {
       "principalType": "ROLE",
       "principalId": "$unauthenticated",
       "permission": "ALLOW",
       "property": "login"
     },
-
     {
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "logout"
     },
-    
     {
+      "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
-      "property": "resetPassword",
-      "accessType": "EXECUTE"
+      "property": "resetPassword"
     },
-    
     {
       "principalType": "ROLE",
       "principalId": "$owner",

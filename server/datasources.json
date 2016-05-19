@@ -20,7 +20,7 @@
     "name": "mitmart-testing",
     "user": "",
     "connector": "mongodb"
-  },  
+  },
   "elasticemail": {
     "name": "elasticemail",
     "connector": "mail",
