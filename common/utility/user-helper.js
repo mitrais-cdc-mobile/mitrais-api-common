@@ -1,6 +1,7 @@
 "use strict";
 
 const app = require('../../server/server');
+const config = require('../../server/config');
 class UserHelper {
     /**
      * Validate user's fields
@@ -125,7 +126,7 @@ class UserHelper {
 	 * Send Registration Result
 	 */
 	static sendMerchantRegistrationResult(context, userInstance, next) {
-		const ttl = 1209600; //two week
+		let ttl = config.authTempTokenTtl;
 		let userModel = app.models.User;
 		userModel.findOne({ where: { email: userInstance.__data.email } }, function (err, user) {
 			if (err) {
