@@ -20,7 +20,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "merchants": {
+      "type": "hasOne",
+      "model": "Merchant",
+      "foreignKey": ""
+    }
+  },
   "acls": [
     {
       "principalType": "ROLE",
