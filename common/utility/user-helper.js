@@ -134,6 +134,35 @@ class UserHelper {
 		userModel.disableRemoteMethod('__get__accessTokens', false);
 		userModel.disableRemoteMethod('__updateById__accessTokens', false);
 	}
+
+	static checkUserMerchant(userId, context, next) {
+	 	const app = require('../../server/server');
+		const user = app.models.User;
+		const merchant = app.models.Merchant;
+		
+		user.findById(userId, {}, (err, res) => {
+			if (err) false;
+
+			const obj = res.__data;
+			if(obj && obj.accountType == 'Merchant'){
+				merchant.find({
+					userId : userId
+				}, (err, res) => {
+					if(err) next(err);
+					
+					context.result.isWizardCompleted = false;
+					
+					if(res && res.length > 0){
+						context.result.isWizardCompleted = true;	
+					}
+					
+					next(); 
+				});
+			}else {
+                next();
+            }
+		});
+	}
 };
 
 module.exports = UserHelper;

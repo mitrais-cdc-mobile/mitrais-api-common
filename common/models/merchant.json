@@ -8,18 +8,19 @@
   "properties": {
     "name": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "email": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "merchantType": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "description": {
-      "type": "string"
+      "type": "string",
+      "required": false
     },
     "displayName": {
       "type": "string",
@@ -27,19 +28,19 @@
     },
     "location": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "region": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "country": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "deliveryMethod": {
       "type": "string",
-      "required": false
+      "required": true
     }
   },
   "validations": [],

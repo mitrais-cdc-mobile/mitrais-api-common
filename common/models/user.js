@@ -27,4 +27,15 @@ module.exports = (user) => {
             next()
         };
     });
+
+    /**
+     * Check after login 
+     */
+    user.afterRemote('login', (context, userInstance, next) => {
+        if (userInstance.__data && userInstance.__data.userId) {
+            userHelper.checkUserMerchant(userInstance.__data.userId, context, next)
+        } else {
+            next()
+        };
+    });
 };
