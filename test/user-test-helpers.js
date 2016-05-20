@@ -9,10 +9,10 @@ class UserTestHelpers {
     /**
      * A helper for creating user account for testing purpose
      */
-    static createTestUserAccount(userName, email, password) {
+    static createTestUserAccount(userName, email, password, accountType) {
         return new Promise((resolve, reject) => {
             let user = app.models.User;
-            const createRequest = { email: email, password: password, username: userName };
+            const createRequest = { email: email, password: password, username: userName, accountType: accountType };
             user.create(createRequest,
                 (err, res) => {
                     if (err) reject(err);
