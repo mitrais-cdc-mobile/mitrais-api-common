@@ -1,7 +1,5 @@
 "use strict";
 
-const app = require('../../server/server');
-const config = require('../../server/config');
 class UserHelper {
     /**
      * Validate user's fields
@@ -121,27 +119,6 @@ class UserHelper {
 		});
 		return next();
 	};
-
-	/**
-	 * Send Registration Result
-	 */
-	static sendMerchantRegistrationResult(context, userInstance, next) {
-		let ttl = config.authTempTokenTtl;
-		let userModel = app.models.User;
-		userModel.findOne({ where: { email: userInstance.__data.email } }, function (err, user) {
-			if (err) {
-				return cb(err);
-			}
-			user.accessTokens.create({ ttl: ttl }, function (err, accessToken) {
-				if (err) {
-					return next(err);
-				}
-				context.result.accessToken = accessToken.id;
-				return next();
-			});
-		});
-
-	}
 
 	/**
 	 * Disable remote methods

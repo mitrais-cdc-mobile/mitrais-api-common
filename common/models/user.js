@@ -17,16 +17,11 @@ module.exports = (user) => {
      * Send a verification email after registration 
      */
     user.afterRemote('create', (context, userInstance, next) => {
-        if ((userInstance.__data) && (userInstance.__data.email)) {
-            const accountType = userInstance.__data.accountType;
-            if ((accountType) && (accountType == 'Customer')) {
-                if ((process.env.MITMART_SIGNUP_AUTOVERIFICATION) && (process.env.MITMART_SIGNUP_AUTOVERIFICATION == "true")) {
-                    userHelper.autoVerify(userInstance, next);
-                } else {
-                    userHelper.sendVerificationEmail(userInstance, next);
-                }
-            } else if (accountType == 'Merchant') {
-                userHelper.sendMerchantRegistrationResult(context, userInstance, next);
+        if ((userInstance.__data) && (userInstance.__data.email) && (userInstance.__data.accountType)) {
+            if ((process.env.MITMART_SIGNUP_AUTOVERIFICATION) && (process.env.MITMART_SIGNUP_AUTOVERIFICATION == "true")) {
+                userHelper.autoVerify(userInstance, next);
+            } else {
+                userHelper.sendVerificationEmail(userInstance, next);
             }
         } else {
             next()
