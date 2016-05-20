@@ -14,6 +14,9 @@
     },
     "phone": {
       "type": "string"
+    },
+    "accountType": {
+      "type": "string"
     }
   },
   "validations": [],

@@ -14,6 +14,8 @@ const request = chai.request;
 const TEST_USER_NAME = 'userTest';
 const TEST_USER_PASSWORD = 'username';
 const TEST_USER_EMAIL = 'userTest@gmail.com';
+const TEST_USER_ACCOUNT_TYPE = 'Customer';
+
 
 /**
  * Tests suite related to Sign Up's feature.
@@ -24,10 +26,12 @@ describe('Sign Up', function () {
     const TEST_SIGNUP_USER_NAME = 'signup_username';
     const TEST_SIGNUP_USER_EMAIL = 'signup_useremail@gmail.com';
     const TEST_SIGNUP_USER_PASSWORD = 'signup_userpassword';
+    const TEST_SIGNUP_USER_ACCOUNT_TYPE = 'Customer';
 
     const TEST_SIGNUP_USER_NAME2 = 'signup_username2';
     const TEST_SIGNUP_USER_EMAIL2 = 'signup_useremail2@gmail.com';
     const TEST_SIGNUP_USER_PASSWORD2 = 'signup_userpassword2';
+    const TEST_SIGNUP_USER_ACCOUNT_TYPE2 = 'Merchant';
 
     before(() => {
         request(apiAddress)
@@ -37,7 +41,8 @@ describe('Sign Up', function () {
             .send({
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: TEST_SIGNUP_USER_PASSWORD,
-                username: TEST_SIGNUP_USER_NAME
+                username: TEST_SIGNUP_USER_NAME,
+                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -60,7 +65,8 @@ describe('Sign Up', function () {
             .send({
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: TEST_SIGNUP_USER_PASSWORD,
-                username: ''
+                username: '',
+                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -81,7 +87,8 @@ describe('Sign Up', function () {
             .send({
                 email: '',
                 password: TEST_SIGNUP_USER_PASSWORD,
-                username: TEST_SIGNUP_USER_NAME
+                username: TEST_SIGNUP_USER_NAME,
+                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -102,7 +109,30 @@ describe('Sign Up', function () {
             .send({
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: '',
-                username: TEST_SIGNUP_USER_NAME
+                username: TEST_SIGNUP_USER_NAME,
+                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
+            })
+            .then(res => {
+                expect(res).to.have.status(422);
+                done();
+            })
+            .catch(err => {
+                expect(err).to.not.be.null;
+                expect(err).to.have.status(422);
+                done();
+            });
+    });
+    
+    it('Return error when Account Type is Empty', (done) => {
+        request(apiAddress)
+            .post('/users')
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+            .send({
+                email: TEST_SIGNUP_USER_EMAIL,
+                password: TEST_SIGNUP_USER_PASSWORD,
+                username: TEST_SIGNUP_USER_NAME,
+                accountType : ''
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -123,7 +153,8 @@ describe('Sign Up', function () {
             .send({
                 email: 'USERNAME',
                 password: TEST_SIGNUP_USER_PASSWORD,
-                username: TEST_SIGNUP_USER_NAME
+                username: TEST_SIGNUP_USER_NAME,
+                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -144,7 +175,8 @@ describe('Sign Up', function () {
             .send({
                 email: "USEREMAIL@GMAIL.COM",
                 password: TEST_SIGNUP_USER_PASSWORD,
-                username: TEST_SIGNUP_USER_NAME
+                username: TEST_SIGNUP_USER_NAME,
+                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -165,7 +197,8 @@ describe('Sign Up', function () {
             .send({
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: TEST_SIGNUP_USER_PASSWORD,
-                username: 'USERNAME'
+                username: 'USERNAME',
+                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -186,13 +219,15 @@ describe('Sign Up', function () {
             .send({
                 email: TEST_SIGNUP_USER_EMAIL2,
                 password: TEST_SIGNUP_USER_PASSWORD2,
-                username: TEST_SIGNUP_USER_NAME2
+                username: TEST_SIGNUP_USER_NAME2,
+                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE2
             })
             .then(res => {
                 expect(res).to.have.status(200);
                 expect(res.body.email).to.equal(TEST_SIGNUP_USER_EMAIL2);
                 expect(res.body.username).to.equal(TEST_SIGNUP_USER_NAME2);
                 expect(res.body.id).exist;
+                expect(res.body.accountType).to.equal(TEST_SIGNUP_USER_ACCOUNT_TYPE2);
                 done();
             })
             .catch(err => {
@@ -209,7 +244,7 @@ describe('Access security', function () {
 
     before((done) => {
         this.timeout(10000);
-        testHelper.createTestUserAccount(TEST_USER_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD)
+        testHelper.createTestUserAccount(TEST_USER_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD, TEST_USER_ACCOUNT_TYPE)
             .then(id => {
                 testUserId = id;
                 done();
@@ -284,13 +319,15 @@ describe('Access security', function () {
             .send({
                 username: email,
                 email: email,
-                password: TEST_USER_PASSWORD
+                password: TEST_USER_PASSWORD,
+                accountType: TEST_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
                 expect(res.body.email).to.equal(email);
                 expect(res.body.username).to.equal(email);
                 expect(res.body.id).exist;
+                expect(res.body.accountType).to.equal(TEST_USER_ACCOUNT_TYPE);
                 testHelper.disposeTestUserAccount(email);
                 done();
             })
@@ -348,7 +385,8 @@ describe('Access security', function () {
             .send({
                 username: SecondUserMail,
                 email: SecondUserMail,
-                password: TEST_USER_PASSWORD
+                password: TEST_USER_PASSWORD,
+                accountType: TEST_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -426,7 +464,8 @@ describe('Access security', function () {
             .send({
                 username: SecondUserMail,
                 email: SecondUserMail,
-                password: TEST_USER_PASSWORD
+                password: TEST_USER_PASSWORD,
+                accountType: TEST_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -489,7 +528,8 @@ describe('Access security', function () {
             .send({
                 username: SecondUserMail,
                 email: SecondUserMail,
-                password: TEST_USER_PASSWORD
+                password: TEST_USER_PASSWORD,
+                accountType: TEST_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -512,10 +552,12 @@ describe('Sign In', function () {
     const TEST_SIGNIN_USER_NAME = 'signin_username';
     const TEST_SIGNIN_USER_EMAIL = 'signin_useremail@gmail.com';
     const TEST_SIGNIN_USER_PASSWORD = 'signin_userpassword';
+    const TEST_SIGNIN_USER_ACCOUNT_TYPE = 'Customer';
 
     const TEST_SIGNIN_VERIFIED_USER_NAME = 'signin_verified_username';
     const TEST_SIGNIN_VERIFIED_USER_EMAIL = 'signin_verified_useremail@gmail.com';
     const TEST_SIGNIN_VERIFIED_USER_PASSWORD = 'signin_verified_userpassword';
+    const TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE = 'Customer';
 
     this.timeout(20000);
     before((done) => {
@@ -527,7 +569,8 @@ describe('Sign In', function () {
             .send({
                 email: TEST_SIGNIN_USER_EMAIL,
                 password: TEST_SIGNIN_USER_PASSWORD,
-                username: TEST_SIGNIN_USER_NAME
+                username: TEST_SIGNIN_USER_NAME,
+                accountType: TEST_SIGNIN_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -545,7 +588,8 @@ describe('Sign In', function () {
             .send({
                 username: TEST_SIGNIN_VERIFIED_USER_NAME,
                 email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
-                password: TEST_SIGNIN_VERIFIED_USER_PASSWORD
+                password: TEST_SIGNIN_VERIFIED_USER_PASSWORD,
+                accountType: TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -702,6 +746,7 @@ describe('Sign Out', function () {
     const TEST_SIGNOUT_VERIFIED_USER_NAME = 'signout_verified_username';
     const TEST_SIGNOUT_VERIFIED_USER_EMAIL = 'signout_verified_useremail@gmail.com';
     const TEST_SIGNOUT_VERIFIED_USER_PASSWORD = 'signout_verified_userpassword';
+    const TEST_SIGNOUT_VERIFIED_USER_ACCOUNT_TYPE = 'Customer';
 
     let accessToken = '';
 
@@ -726,7 +771,8 @@ describe('Sign Out', function () {
             .send({
                 username: TEST_SIGNOUT_VERIFIED_USER_NAME,
                 email: TEST_SIGNOUT_VERIFIED_USER_EMAIL,
-                password: TEST_SIGNOUT_VERIFIED_USER_PASSWORD
+                password: TEST_SIGNOUT_VERIFIED_USER_PASSWORD,
+                accountType: TEST_SIGNOUT_VERIFIED_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
