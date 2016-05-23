@@ -62,7 +62,7 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "$authenticated, MERCHANT",
+      "principalId": "MERCHANT",
       "permission": "ALLOW",
       "properties": "create"
     },
