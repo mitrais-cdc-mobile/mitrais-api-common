@@ -95,7 +95,7 @@ class UserTestHelpers {
         });
     };
 
-    static assignMerchantRoleToUser(userId, ) {
+    static assignMerchantRoleToUser(userId) {
         return new Promise((resolve, reject) => {
             let Role = app.models.Role;
             let RoleMapping = app.models.RoleMapping;
