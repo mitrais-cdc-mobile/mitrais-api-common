@@ -693,6 +693,7 @@ describe('Sign In', function () {
         testHelper.disposeTestUserAccount(TEST_SIGNIN_USER_NAME);
         testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
         testHelper.disposeTestUserAccount(TEST_SIGNIN_MERCHANT_VERIFIED_USER_NAME);
+        testHelper.disposeTestUserAccount(TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_NAME);
         testHelper.disposeTestMerchantAccountById(merchantId);
     });
 
@@ -830,6 +831,27 @@ describe('Sign In', function () {
                 expect(res.body.id).exist;
                 expect(res.body.userId).exist;
                 expect(res.body.isWizardCompleted).to.not.be.true;
+                done();
+            })
+            .catch(err => {
+                done(err);
+            });
+    });
+    
+    it('Return OK when using verified user merchant with merchant data and using valid username and password', (done) => {
+        request(apiAddress)
+            .post('/users/login')
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+            .send({
+                username: TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_NAME,
+                password: TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_PASSWORD
+            })
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res.body.id).exist;
+                expect(res.body.userId).exist;
+                expect(res.body.isWizardCompleted).to.be.true;
                 done();
             })
             .catch(err => {
