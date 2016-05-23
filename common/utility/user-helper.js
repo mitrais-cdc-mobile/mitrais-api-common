@@ -141,7 +141,7 @@ class UserHelper {
 		const merchant = app.models.Merchant;
 		
 		user.findById(userId, {}, (err, res) => {
-			if (err) false;
+			if (err) next(err);
 
 			const obj = res.__data;
 			if(obj && obj.accountType == 'Merchant'){

@@ -559,6 +559,12 @@ describe('Sign In', function () {
     const TEST_SIGNIN_VERIFIED_USER_PASSWORD = 'signin_verified_userpassword';
     const TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE = 'Customer';
 
+    // merchant
+    const TEST_SIGNIN_MERCHANT_VERIFIED_USER_NAME = 'signin_merchant_verified_username';
+    const TEST_SIGNIN_MERCHANT_VERIFIED_USER_EMAIL = 'signin_merchant_verified_useremail@gmail.com';
+    const TEST_SIGNIN_MERCHANT_VERIFIED_USER_PASSWORD = 'signin_merchant_verified_userpassword';
+    const TEST_SIGNIN_MERCHANT_VERIFIED_USER_ACCOUNT_TYPE = 'Merchant';
+
     this.timeout(20000);
     before((done) => {
         // unverified user
@@ -590,6 +596,36 @@ describe('Sign In', function () {
                 email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
                 password: TEST_SIGNIN_VERIFIED_USER_PASSWORD,
                 accountType: TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE
+            })
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res.body.id).exist;
+                const userId = res.body.id;
+
+                testHelper.verifyTestUserAccount(userId)
+                    .then(() => {
+                        done();
+                    })
+                    .catch(err => {
+                        console.log(`[ERROR] - In before method. Error = ${err}`);
+                        done(err);
+                    });
+            })
+            .catch(err => {
+                console.log(`[ERROR] - In before method. Error = ${err}`);
+                done(err);
+            });
+            
+        // verified user merchant 
+        request(apiAddress)
+            .post('/users')
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+            .send({
+                username: TEST_SIGNIN_MERCHANT_VERIFIED_USER_NAME,
+                email: TEST_SIGNIN_MERCHANT_VERIFIED_USER_EMAIL,
+                password: TEST_SIGNIN_MERCHANT_VERIFIED_USER_PASSWORD,
+                accountType: TEST_SIGNIN_MERCHANT_VERIFIED_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -729,6 +765,27 @@ describe('Sign In', function () {
                 expect(res).to.have.status(200);
                 expect(res.body.id).exist;
                 expect(res.body.userId).exist;
+                done();
+            })
+            .catch(err => {
+                done(err);
+            });
+    });
+    
+    it('Return OK when using verified user merchant with no merchant data and using valid username and password', (done) => {
+        request(apiAddress)
+            .post('/users/login')
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+            .send({
+                username: TEST_SIGNIN_MERCHANT_VERIFIED_USER_NAME,
+                password: TEST_SIGNIN_MERCHANT_VERIFIED_USER_PASSWORD
+            })
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res.body.id).exist;
+                expect(res.body.userId).exist;
+                expect(res.body.isWizardCompleted).to.not.be.true;
                 done();
             })
             .catch(err => {

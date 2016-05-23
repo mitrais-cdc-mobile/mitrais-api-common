@@ -80,6 +80,65 @@ class UserTestHelpers {
                 });
         });
     };
+
+    static createTestMerchantAccount(userId) {
+        return new Promise((resolve, reject) => {
+            let merchant = app.models.Merchant;
+            const createRequest = { userId: userId };
+            merchant.create(createRequest,
+                (err, res) => {
+                    if (err) reject(err);
+
+                    const merchantId = res.id;
+                    resolve(merchantId);
+                });
+        });
+    };
+
+    static assignMerchantRoleToUser(userId, ) {
+        return new Promise((resolve, reject) => {
+            let Role = app.models.Role;
+            let RoleMapping = app.models.RoleMapping;
+
+            Role.create({
+                name: 'MERCHANT'
+            }, function (err, role) {
+                if (err) return reject(err);
+                console.log(role);
+
+                role.principals.create({
+                    principalType: RoleMapping.USER,
+                    principalId: userId
+                }, function (err, principal) {
+                    if (err) return reject(err);
+                    console.log(principal);
+
+                    resolve();
+                });
+            });
+        });
+    }
+
+    static disposeTestMerchantAccountById(id, userId) {
+        let Merchant = app.models.Merchant;
+        let Role = app.models.Role;
+        let RoleMapping = app.models.RoleMapping;
+
+        Merchant.destroyAll({ 'id': id },
+            (err, obj, count) => {
+                if (err) throw err;
+            });
+
+        RoleMapping.destroyAll({ 'principalId': userId },
+            (err, obj, count) => {
+                if (err) throw err;
+            });
+
+        Role.destroyAll({ 'name': 'MERCHANT' },
+            (err, obj, count) => {
+                if (err) throw err;
+            });
+    }
 };
 
 module.exports = UserTestHelpers;

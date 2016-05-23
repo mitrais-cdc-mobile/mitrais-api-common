@@ -8,15 +8,15 @@
   "properties": {
     "name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "email": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "merchantType": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "description": {
       "type": "string",
@@ -28,19 +28,19 @@
     },
     "location": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "region": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "country": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "deliveryMethod": {
       "type": "string",
-      "required": true
+      "required": false
     }
   },
   "validations": [],
@@ -58,6 +58,13 @@
       "principalId": "$owner",
       "permission": "ALLOW",
       "properties": "updateAttributes"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated,MERCHANT",
+      "permission": "ALLOW",
+      "properties": "create"
     },
     {
       "accessType": "READ",
