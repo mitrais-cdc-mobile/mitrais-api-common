@@ -16,7 +16,6 @@ const TEST_USER_PASSWORD = 'username';
 const TEST_USER_EMAIL = 'userTest@gmail.com';
 const TEST_USER_ACCOUNT_TYPE = 'Customer';
 
-
 /**
  * Tests suite related to Sign Up's feature.
  */
@@ -826,10 +825,13 @@ describe('Sign In', function () {
                 password: TEST_SIGNIN_MERCHANT_VERIFIED_USER_PASSWORD
             })
             .then(res => {
+                console.log('no data, iswizardcomplete:'+res.body.isWizardCompleted);
                 expect(res).to.have.status(200);
                 expect(res.body.id).exist;
                 expect(res.body.userId).exist;
-                expect(res.body.isWizardCompleted).to.be.false;
+                
+                // expect wizard completed = false
+                expect(res.body.isWizardCompleted).to.equal(false);
                 done();
             })
             .catch(err => {
@@ -847,10 +849,13 @@ describe('Sign In', function () {
                 password: TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_PASSWORD
             })
             .then(res => {
+                console.log('with data, iswizardcomplete:'+res.body.isWizardCompleted);
                 expect(res).to.have.status(200);
                 expect(res.body.id).exist;
                 expect(res.body.userId).exist;
-                expect(res.body.isWizardCompleted).to.be.true;
+                
+                // expect wizard completed = true
+                expect(res.body.isWizardCompleted).to.equal(true);
                 done();
             })
             .catch(err => {
