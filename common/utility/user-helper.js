@@ -136,33 +136,72 @@ class UserHelper {
 	}
 
 	static checkUserMerchant(userId, context, next) {
-	 	const app = require('../../server/server');
+		const app = require('../../server/server');
 		const user = app.models.User;
 		const merchant = app.models.Merchant;
-		
+
 		user.findById(userId, {}, (err, res) => {
 			if (err) next(err);
 
 			const obj = res.__data;
-			if(obj && obj.accountType == 'Merchant'){
+			if (obj && obj.accountType == 'Merchant') {
 				merchant.find({
-					where: {userId : userId}
+					where: { userId: userId }
 				}, (err, res) => {
-					if(err) next(err);
-					
+					if (err) next(err);
+
 					context.result.isWizardCompleted = false;
-					
-					if(res && res.length > 0){
-						context.result.isWizardCompleted = true;	
+
+					if (res && res.length > 0) {
+						context.result.isWizardCompleted = true;
 					}
-					
-					next(); 
+
+					next();
 				});
-			}else {
+			} else {
                 next();
             }
 		});
 	}
+
+	/**
+     * assign merchant role
+     */
+    static assignMerchantRole(userId) {
+        const app = require('../../server/server');
+        let Role = app.models.Role;
+        let RoleMapping = app.models.RoleMapping;
+
+        Role.find({
+            where: { name: 'MERCHANT' }
+        }, (err, roleRes) => {
+            if (err) throw err;
+
+            if (roleRes) {
+				if (roleRes.length == 0) {
+					Role.create({
+						name: 'MERCHANT'
+					}, function (err, role) {
+						if (err) throw err;
+
+						role.principals.create({
+							principalType: RoleMapping.USER,
+							principalId: userId
+						}, function (err, principal) {
+							if (err) throw err;
+						});
+					});
+				} else {
+					roleRes[0].principals.create({
+						principalType: RoleMapping.USER,
+						principalId: userId
+					}, function (err, principal) {
+						if (err) throw err;
+					});
+				}
+			}
+        });
+    }
 };
 
 module.exports = UserHelper;

@@ -8,15 +8,15 @@
   "properties": {
     "name": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "email": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "merchantType": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "description": {
       "type": "string",
@@ -40,7 +40,7 @@
     },
     "deliveryMethod": {
       "type": "string",
-      "required": false
+      "required": true
     }
   },
   "validations": [],
@@ -62,7 +62,7 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "$authenticated",
+      "principalId": "$authenticated, MERCHANT",
       "permission": "ALLOW",
       "properties": "create"
     },
