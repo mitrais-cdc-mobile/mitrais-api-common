@@ -672,7 +672,6 @@ describe('Sign In', function () {
                         testHelper.createTestMerchantAccount(userId)
                             .then(id => {
                                 merchantId = id;
-                                console.log("id: " + id);
                             }).catch(err => {
                                 console.log(`[ERROR] - In before method. Error = ${err}`);
                                 done(err);
@@ -830,7 +829,7 @@ describe('Sign In', function () {
                 expect(res).to.have.status(200);
                 expect(res.body.id).exist;
                 expect(res.body.userId).exist;
-                expect(res.body.isWizardCompleted).to.not.be.true;
+                expect(res.body.isWizardCompleted).to.be.false;
                 done();
             })
             .catch(err => {
