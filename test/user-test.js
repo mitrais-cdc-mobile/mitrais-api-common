@@ -825,7 +825,6 @@ describe('Sign In', function () {
                 password: TEST_SIGNIN_MERCHANT_VERIFIED_USER_PASSWORD
             })
             .then(res => {
-                console.log('no data, iswizardcomplete:'+res.body.isWizardCompleted);
                 expect(res).to.have.status(200);
                 expect(res.body.id).exist;
                 expect(res.body.userId).exist;
@@ -849,7 +848,6 @@ describe('Sign In', function () {
                 password: TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_PASSWORD
             })
             .then(res => {
-                console.log('with data, iswizardcomplete:'+res.body.isWizardCompleted);
                 expect(res).to.have.status(200);
                 expect(res.body.id).exist;
                 expect(res.body.userId).exist;

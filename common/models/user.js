@@ -33,7 +33,8 @@ module.exports = (user) => {
      */
     user.afterRemote('login', (context, userInstance, next) => {
         if (userInstance.__data && userInstance.__data.userId) {
-            userHelper.checkUserMerchant(userInstance.__data.userId, context, next)
+            let userId = userInstance.__data.userId.toHexString();
+            userHelper.checkUserMerchant(userId, context, next)
         } else {
             next()
         };

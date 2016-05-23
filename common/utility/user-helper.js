@@ -146,7 +146,7 @@ class UserHelper {
 			const obj = res.__data;
 			if(obj && obj.accountType == 'Merchant'){
 				merchant.find({
-					userId : userId
+					where: {userId : userId}
 				}, (err, res) => {
 					if(err) next(err);
 					
