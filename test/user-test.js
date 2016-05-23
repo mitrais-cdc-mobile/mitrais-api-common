@@ -604,16 +604,13 @@ describe('Sign In', function () {
 
                 testHelper.verifyTestUserAccount(userId)
                     .then(() => {
-                        done();
                     })
                     .catch(err => {
                         console.log(`[ERROR] - In before method. Error = ${err}`);
-                        done(err);
                     });
             })
             .catch(err => {
                 console.log(`[ERROR] - In before method. Error = ${err}`);
-                done(err);
             });
             
         // verified user merchant 
@@ -650,6 +647,7 @@ describe('Sign In', function () {
     after(() => {
         testHelper.disposeTestUserAccount(TEST_SIGNIN_USER_NAME);
         testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
+        testHelper.disposeTestUserAccount(TEST_SIGNIN_MERCHANT_VERIFIED_USER_NAME);
     });
 
     it('Return error when using empty username and password', (done) => {
