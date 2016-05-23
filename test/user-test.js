@@ -571,7 +571,7 @@ describe('Sign In', function () {
     const TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_PASSWORD = 'signin_merchant_data_verified_userpassword';
     const TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_ACCOUNT_TYPE = 'Merchant';
 
-    const merchantId = '';
+    let merchantId = '';
 
     this.timeout(20000);
     before((done) => {
