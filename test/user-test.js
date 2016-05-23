@@ -32,6 +32,7 @@ describe('Sign Up', function () {
     const TEST_SIGNUP_USER_PASSWORD2 = 'signup_userpassword2';
     const TEST_SIGNUP_USER_ACCOUNT_TYPE2 = 'Merchant';
 
+    let merchantUserId ='';
     before(() => {
         request(apiAddress)
             .post('/users')
@@ -54,6 +55,7 @@ describe('Sign Up', function () {
     after(() => {
         testHelper.disposeTestUserAccount(TEST_SIGNUP_USER_NAME);
         testHelper.disposeTestUserAccount(TEST_SIGNUP_USER_NAME2);
+        testHelper.disposeRoleMappingById(merchantUserId);
     });
 
     it('Return error when Username is Empty', (done) => {
@@ -227,6 +229,7 @@ describe('Sign Up', function () {
                 expect(res.body.username).to.equal(TEST_SIGNUP_USER_NAME2);
                 expect(res.body.id).exist;
                 expect(res.body.accountType).to.equal(TEST_SIGNUP_USER_ACCOUNT_TYPE2);
+                merchantUserId = res.body.id;
                 done();
             })
             .catch(err => {
@@ -571,7 +574,9 @@ describe('Sign In', function () {
     const TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_ACCOUNT_TYPE = 'Merchant';
 
     let merchantId = '';
-
+    let merchantVerifiedUserId = '';
+    let merchantDataVerifiedUserId = '';
+    
     this.timeout(20000);
     before((done) => {
         // unverified user
@@ -634,9 +639,9 @@ describe('Sign In', function () {
             .then(res => {
                 expect(res).to.have.status(200);
                 expect(res.body.id).exist;
-                const userId = res.body.id;
+                merchantVerifiedUserId = res.body.id;
 
-                testHelper.verifyTestUserAccount(userId)
+                testHelper.verifyTestUserAccount(merchantVerifiedUserId)
                     .then(() => {
                         done();
                     })
@@ -664,11 +669,11 @@ describe('Sign In', function () {
             .then(res => {
                 expect(res).to.have.status(200);
                 expect(res.body.id).exist;
-                const userId = res.body.id;
+                merchantDataVerifiedUserId = res.body.id;
 
-                testHelper.verifyTestUserAccount(userId)
+                testHelper.verifyTestUserAccount(merchantDataVerifiedUserId)
                     .then(() => {
-                        testHelper.createTestMerchantAccount(userId)
+                        testHelper.createTestMerchantAccount(merchantDataVerifiedUserId)
                             .then(id => {
                                 merchantId = id;
                             }).catch(err => {
@@ -692,6 +697,8 @@ describe('Sign In', function () {
         testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
         testHelper.disposeTestUserAccount(TEST_SIGNIN_MERCHANT_VERIFIED_USER_NAME);
         testHelper.disposeTestUserAccount(TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_NAME);
+        testHelper.disposeRoleMappingById(merchantVerifiedUserId);
+        testHelper.disposeRoleMappingById(merchantDataVerifiedUserId);
         testHelper.disposeTestMerchantAccountById(merchantId);
     });
 

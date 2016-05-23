@@ -84,7 +84,13 @@ class UserTestHelpers {
     static createTestMerchantAccount(userId) {
         return new Promise((resolve, reject) => {
             let merchant = app.models.Merchant;
-            const createRequest = { userId: userId };
+            const createRequest = { 
+                userId: userId,
+                name: 'merchant',
+                email: 'abc@gmail.com',
+                merchantType: 'merchantType',
+                deliveryMethod: 'deliveryMethod'
+             };
             merchant.create(createRequest,
                 (err, res) => {
                     if (err) reject(err);
@@ -95,49 +101,28 @@ class UserTestHelpers {
         });
     };
 
-    static assignMerchantRoleToUser(userId) {
-        return new Promise((resolve, reject) => {
-            let Role = app.models.Role;
-            let RoleMapping = app.models.RoleMapping;
-
-            Role.create({
-                name: 'MERCHANT'
-            }, function (err, role) {
-                if (err) return reject(err);
-                console.log(role);
-
-                role.principals.create({
-                    principalType: RoleMapping.USER,
-                    principalId: userId
-                }, function (err, principal) {
-                    if (err) return reject(err);
-                    console.log(principal);
-
-                    resolve();
-                });
-            });
-        });
-    }
-
+    /**
+     * dispose test merchant account by id
+     */
     static disposeTestMerchantAccountById(id) {
         let Merchant = app.models.Merchant;
-        // let Role = app.models.Role;
-        // let RoleMapping = app.models.RoleMapping;
 
         Merchant.destroyAll({ 'id': id },
             (err, obj, count) => {
                 if (err) throw err;
             });
+    }
+    
+    /**
+     * dispose role mapping by id
+     */
+    static disposeRoleMappingById(id) {
+        let RoleMapping = app.models.RoleMapping;
 
-        // RoleMapping.destroyAll({ 'principalId': userId },
-        //     (err, obj, count) => {
-        //         if (err) throw err;
-        //     });
-
-        // Role.destroyAll({ 'name': 'MERCHANT' },
-        //     (err, obj, count) => {
-        //         if (err) throw err;
-        //     });
+        RoleMapping.destroyAll({ 'principalId': id },
+            (err, obj, count) => {
+                if (err) throw err;
+            });
     }
 };
 

@@ -25,7 +25,6 @@ module.exports = (user) => {
             if ((process.env.MITMART_SIGNUP_AUTOVERIFICATION) && (process.env.MITMART_SIGNUP_AUTOVERIFICATION == "true")) {
                 userHelper.autoVerify(userInstance, next);
             } else {
-                userHelper.autoVerify(userInstance, next);
                 userHelper.sendVerificationEmail(userInstance, next);
             }
         } else {
