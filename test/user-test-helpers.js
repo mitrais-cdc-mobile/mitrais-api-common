@@ -119,25 +119,25 @@ class UserTestHelpers {
         });
     }
 
-    static disposeTestMerchantAccountById(id, userId) {
+    static disposeTestMerchantAccountById(id) {
         let Merchant = app.models.Merchant;
-        let Role = app.models.Role;
-        let RoleMapping = app.models.RoleMapping;
+        // let Role = app.models.Role;
+        // let RoleMapping = app.models.RoleMapping;
 
         Merchant.destroyAll({ 'id': id },
             (err, obj, count) => {
                 if (err) throw err;
             });
 
-        RoleMapping.destroyAll({ 'principalId': userId },
-            (err, obj, count) => {
-                if (err) throw err;
-            });
+        // RoleMapping.destroyAll({ 'principalId': userId },
+        //     (err, obj, count) => {
+        //         if (err) throw err;
+        //     });
 
-        Role.destroyAll({ 'name': 'MERCHANT' },
-            (err, obj, count) => {
-                if (err) throw err;
-            });
+        // Role.destroyAll({ 'name': 'MERCHANT' },
+        //     (err, obj, count) => {
+        //         if (err) throw err;
+        //     });
     }
 };
 

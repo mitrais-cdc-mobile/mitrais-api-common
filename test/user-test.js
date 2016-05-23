@@ -42,7 +42,7 @@ describe('Sign Up', function () {
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: TEST_SIGNUP_USER_PASSWORD,
                 username: TEST_SIGNUP_USER_NAME,
-                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
+                accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -66,7 +66,7 @@ describe('Sign Up', function () {
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: TEST_SIGNUP_USER_PASSWORD,
                 username: '',
-                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
+                accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -88,7 +88,7 @@ describe('Sign Up', function () {
                 email: '',
                 password: TEST_SIGNUP_USER_PASSWORD,
                 username: TEST_SIGNUP_USER_NAME,
-                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
+                accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -110,7 +110,7 @@ describe('Sign Up', function () {
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: '',
                 username: TEST_SIGNUP_USER_NAME,
-                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
+                accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -122,7 +122,7 @@ describe('Sign Up', function () {
                 done();
             });
     });
-    
+
     it('Return error when Account Type is Empty', (done) => {
         request(apiAddress)
             .post('/users')
@@ -132,7 +132,7 @@ describe('Sign Up', function () {
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: TEST_SIGNUP_USER_PASSWORD,
                 username: TEST_SIGNUP_USER_NAME,
-                accountType : ''
+                accountType: ''
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -154,7 +154,7 @@ describe('Sign Up', function () {
                 email: 'USERNAME',
                 password: TEST_SIGNUP_USER_PASSWORD,
                 username: TEST_SIGNUP_USER_NAME,
-                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
+                accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -176,7 +176,7 @@ describe('Sign Up', function () {
                 email: "USEREMAIL@GMAIL.COM",
                 password: TEST_SIGNUP_USER_PASSWORD,
                 username: TEST_SIGNUP_USER_NAME,
-                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
+                accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -198,7 +198,7 @@ describe('Sign Up', function () {
                 email: TEST_SIGNUP_USER_EMAIL,
                 password: TEST_SIGNUP_USER_PASSWORD,
                 username: 'USERNAME',
-                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE
+                accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
             })
             .then(res => {
                 expect(res).to.have.status(422);
@@ -220,7 +220,7 @@ describe('Sign Up', function () {
                 email: TEST_SIGNUP_USER_EMAIL2,
                 password: TEST_SIGNUP_USER_PASSWORD2,
                 username: TEST_SIGNUP_USER_NAME2,
-                accountType : TEST_SIGNUP_USER_ACCOUNT_TYPE2
+                accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE2
             })
             .then(res => {
                 expect(res).to.have.status(200);
@@ -559,11 +559,19 @@ describe('Sign In', function () {
     const TEST_SIGNIN_VERIFIED_USER_PASSWORD = 'signin_verified_userpassword';
     const TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE = 'Customer';
 
-    // merchant
+    // merchant type with no data
     const TEST_SIGNIN_MERCHANT_VERIFIED_USER_NAME = 'signin_merchant_verified_username';
     const TEST_SIGNIN_MERCHANT_VERIFIED_USER_EMAIL = 'signin_merchant_verified_useremail@gmail.com';
     const TEST_SIGNIN_MERCHANT_VERIFIED_USER_PASSWORD = 'signin_merchant_verified_userpassword';
     const TEST_SIGNIN_MERCHANT_VERIFIED_USER_ACCOUNT_TYPE = 'Merchant';
+
+    // merchant type with data
+    const TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_NAME = 'signin_merchant_data_verified_username';
+    const TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_EMAIL = 'signin_merchant_data_verified_useremail@gmail.com';
+    const TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_PASSWORD = 'signin_merchant_data_verified_userpassword';
+    const TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_ACCOUNT_TYPE = 'Merchant';
+
+    const merchantId = '';
 
     this.timeout(20000);
     before((done) => {
@@ -612,8 +620,8 @@ describe('Sign In', function () {
             .catch(err => {
                 console.log(`[ERROR] - In before method. Error = ${err}`);
             });
-            
-        // verified user merchant 
+
+        // verified user merchant with no data 
         request(apiAddress)
             .post('/users')
             .set('Content-Type', 'application/json')
@@ -642,12 +650,50 @@ describe('Sign In', function () {
                 console.log(`[ERROR] - In before method. Error = ${err}`);
                 done(err);
             });
+
+        // verified user merchant with data 
+        request(apiAddress)
+            .post('/users')
+            .set('Content-Type', 'application/json')
+            .set('Accept', 'application/json')
+            .send({
+                username: TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_NAME,
+                email: TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_EMAIL,
+                password: TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_PASSWORD,
+                accountType: TEST_SIGNIN_MERCHANT_DATA_VERIFIED_USER_ACCOUNT_TYPE
+            })
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res.body.id).exist;
+                const userId = res.body.id;
+
+                testHelper.verifyTestUserAccount(userId)
+                    .then(() => {
+                        testHelper.createTestMerchantAccount(userId)
+                            .then(id => {
+                                merchantId = id;
+                                console.log("id: " + id);
+                            }).catch(err => {
+                                console.log(`[ERROR] - In before method. Error = ${err}`);
+                                done(err);
+                            });
+                    })
+                    .catch(err => {
+                        console.log(`[ERROR] - In before method. Error = ${err}`);
+                        done(err);
+                    });
+            })
+            .catch(err => {
+                console.log(`[ERROR] - In before method. Error = ${err}`);
+                done(err);
+            });
     });
 
     after(() => {
         testHelper.disposeTestUserAccount(TEST_SIGNIN_USER_NAME);
         testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
         testHelper.disposeTestUserAccount(TEST_SIGNIN_MERCHANT_VERIFIED_USER_NAME);
+        testHelper.disposeTestMerchantAccountById(merchantId);
     });
 
     it('Return error when using empty username and password', (done) => {
@@ -769,7 +815,7 @@ describe('Sign In', function () {
                 done(err);
             });
     });
-    
+
     it('Return OK when using verified user merchant with no merchant data and using valid username and password', (done) => {
         request(apiAddress)
             .post('/users/login')
