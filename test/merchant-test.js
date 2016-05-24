@@ -53,7 +53,9 @@ describe('Create Merchant', function () {
                             TEST_CREATE_MERCHANT_USER_NAME, TEST_CREATE_MERCHANT_USER_PASSWORD).then(token => {
                                 accessToken = token;
                                 done();
-                            });
+                            }).catch(err => {
+                                done(err);
+                            });;
                     });
             })
             .catch(err => {
@@ -64,7 +66,7 @@ describe('Create Merchant', function () {
     after(() => {
         userTestHelper.disposeTestUserAccount(TEST_CREATE_MERCHANT_USER_NAME);
         userTestHelper.disposeRoleMappingById(merchantUserId);
-        merchantTestHelper.disposeTestMerchantAccountByName(TEST_CREATE_MERCHANT_NAME);        
+        merchantTestHelper.disposeTestMerchantAccountByName(TEST_CREATE_MERCHANT_NAME);
     });
 
     it('Return error when name is Empty', (done) => {
@@ -88,7 +90,7 @@ describe('Create Merchant', function () {
                 done();
             });
     });
-    
+
     it('Return error when email is Empty', (done) => {
         request(apiAddress)
             .post(`/Merchants?access_token=${accessToken}`)
@@ -110,7 +112,7 @@ describe('Create Merchant', function () {
                 done();
             });
     });
-    
+
     it('Return error when merchant type is Empty', (done) => {
         request(apiAddress)
             .post(`/Merchants?access_token=${accessToken}`)
@@ -132,7 +134,7 @@ describe('Create Merchant', function () {
                 done();
             });
     });
-    
+
     it('Return error when delivery method is Empty', (done) => {
         request(apiAddress)
             .post(`/Merchants?access_token=${accessToken}`)
@@ -154,7 +156,7 @@ describe('Create Merchant', function () {
                 done();
             });
     });
-    
+
     it('Return error when email with invalid format', (done) => {
         request(apiAddress)
             .post(`/Merchants?access_token=${accessToken}`)
@@ -176,7 +178,7 @@ describe('Create Merchant', function () {
                 done();
             });
     });
-    
+
     it('Return ok when using valid input', (done) => {
         request(apiAddress)
             .post(`/Merchants?access_token=${accessToken}`)

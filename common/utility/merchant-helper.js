@@ -11,7 +11,7 @@ class MerchantHelper {
         let code;
 
         let isValid = true;
-
+        console.log("merchant: "+merchant.name);
         if (typeof (merchant.name) == 'undefined' || merchant.name == '') {
             codes.name = [];
             code = 'NAME_IS_EMPTY';
