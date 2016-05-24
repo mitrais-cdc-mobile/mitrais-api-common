@@ -4,4 +4,8 @@ module.exports = function(Merchant) {
     Merchant.beforeRemote('create', (context, merchantData, next) => {
         merchantHelper.validateFields(context.req.body, next);
     });
+    
+    Merchant.beforeRemote('updateAttributes', (context, merchantData, next) => {
+        merchantHelper.validateFields(context.req.body, next);
+    });
 };
