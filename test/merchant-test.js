@@ -390,9 +390,9 @@ describe('MERCHANT TEST CASES', function () {
         });
 
         it('Return error when get merchant with invalid id', (done) => {
+            let invalidId = 'abc';
             request(apiAddress)
-                .get(`/Merchants/abc?access_token=${accessToken}`)
-                .set('Content-Type', 'application/json')
+                .get(`/Merchants/${invalidId}?access_token=${accessToken}`)
                 .set('Accept', 'application/json')
                 .then(res => {
                     expect(res).to.have.status(404);
@@ -401,14 +401,13 @@ describe('MERCHANT TEST CASES', function () {
                 .catch(err => {
                     expect(err).to.not.be.null;
                     expect(err).to.have.status(404);
-                    done(err);
+                    done();
                 });
         });
         
         it('Return ok when getting data with valid id', (done) => {
             request(apiAddress)
                 .get(`/Merchants/${merchantId}?access_token=${accessToken}`)
-                .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
                 .then(res => {
                     expect(res).to.have.status(200);
