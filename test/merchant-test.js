@@ -17,13 +17,18 @@ describe('MERCHANT TEST CASES', function () {
     /**
      * Tests suite related to create merchant's feature.
      */
-    describe.skip('Create Merchant', function () {
+    describe('Create Merchant', function () {
         this.timeout(20000);
 
         const TEST_CREATE_MERCHANT_USER_NAME = 'create_merchant_username';
         const TEST_CREATE_MERCHANT_USER_EMAIL = 'create_merchant_useremail@gmail.com';
         const TEST_CREATE_MERCHANT_USER_PASSWORD = 'create_merchant_userpassword';
         const TEST_CREATE_MERCHANT_ACCOUNT_TYPE = 'Merchant';
+
+        const TEST_CREATE_CUSTOMER_USER_NAME = 'create_customer_username';
+        const TEST_CREATE_CUSTOMER_USER_EMAIL = 'create_customer_useremail@gmail.com';
+        const TEST_CREATE_CUSTOMER_USER_PASSWORD = 'create_customer_userpassword';
+        const TEST_CREATE_CUSTOMER_ACCOUNT_TYPE = 'Customer';
 
         const TEST_CREATE_MERCHANT_NAME = 'create_merchant_name';
         const TEST_CREATE_MERCHANT_EMAIL = 'create_merchant_email@gmail.com';
@@ -32,8 +37,38 @@ describe('MERCHANT TEST CASES', function () {
 
         let merchantUserId = '';
         let accessToken = '';
+        let customerAccessToken = '';
 
         before((done) => {
+            // create customer type account
+            request(apiAddress)
+                .post('/users')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .send({
+                    email: TEST_CREATE_CUSTOMER_USER_EMAIL,
+                    password: TEST_CREATE_CUSTOMER_USER_PASSWORD,
+                    username: TEST_CREATE_CUSTOMER_USER_NAME,
+                    accountType: TEST_CREATE_CUSTOMER_ACCOUNT_TYPE
+                })
+                .then(res => {
+                    expect(res).to.have.status(200);
+                    expect(res.body.id).exist;
+
+                    userTestHelper.verifyTestUserAccount(res.body.id)
+                        .then(() => {
+                            userTestHelper.loginTestUserAccount(
+                                TEST_CREATE_CUSTOMER_USER_NAME, TEST_CREATE_CUSTOMER_USER_PASSWORD).then(token => {
+                                    customerAccessToken = token;
+                                }).catch(err => {
+                                    console.log(err);
+                                });
+                        });
+                })
+                .catch(err => {
+                    done(err);
+                });
+
             request(apiAddress)
                 .post('/users')
                 .set('Content-Type', 'application/json')
@@ -57,7 +92,7 @@ describe('MERCHANT TEST CASES', function () {
                                     done();
                                 }).catch(err => {
                                     done(err);
-                                });;
+                                });
                         });
                 })
                 .catch(err => {
@@ -67,6 +102,7 @@ describe('MERCHANT TEST CASES', function () {
 
         after(() => {
             userTestHelper.disposeTestUserAccount(TEST_CREATE_MERCHANT_USER_NAME);
+            userTestHelper.disposeTestUserAccount(TEST_CREATE_CUSTOMER_USER_NAME);
             userTestHelper.disposeRoleMappingById(merchantUserId);
             merchantTestHelper.disposeTestMerchantAccountByName(TEST_CREATE_MERCHANT_NAME);
         });
@@ -202,6 +238,29 @@ describe('MERCHANT TEST CASES', function () {
                     done(err);
                 });
         });
+
+        it('Return error when using customer account type', (done) => {
+            request(apiAddress)
+                .post(`/Merchants?access_token=${customerAccessToken}`)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .send({
+                    name: "customer",
+                    email: "customer",
+                    merchantType: "merchantType",
+                    deliveryMethod: "deliveryMethod",
+                    userId: "123"
+                })
+                .then(res => {
+                    expect(res).to.have.status(401);
+                    done();
+                })
+                .catch(err => {
+                    expect(err).to.not.be.null;
+                    expect(err).to.have.status(401);
+                    done();
+                });
+        });
     });
 
     /**
@@ -295,7 +354,7 @@ describe('MERCHANT TEST CASES', function () {
                     done();
                 });
         });
-        
+
         it('Return ok when updating with valid data', (done) => {
             request(apiAddress)
                 .put(`/Merchants/${merchantId}?access_token=${accessToken}`)
@@ -319,12 +378,12 @@ describe('MERCHANT TEST CASES', function () {
         });
 
     });
-    
+
     /**
      * Tests suite related to get merchant's feature.
      */
-    describe('Get Merchant', function () {
-        this.timeout(20000);
+    describe.skip('Get Merchant', function () {
+        this.timeout(50000);
 
         const TEST_GET_MERCHANT_USER_NAME = 'get_merchant_username';
         const TEST_GET_MERCHANT_USER_EMAIL = 'get_merchant_useremail@gmail.com';
@@ -355,7 +414,6 @@ describe('MERCHANT TEST CASES', function () {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
                     merchantUserId = res.body.id;
-
                     userTestHelper.verifyTestUserAccount(merchantUserId)
                         .then(() => {
                             userTestHelper.loginTestUserAccount(
@@ -376,6 +434,8 @@ describe('MERCHANT TEST CASES', function () {
                                 }).catch(err => {
                                     done(err);
                                 });
+                        }).catch(err => {
+                            done(err);
                         });
                 })
                 .catch(err => {
@@ -389,22 +449,21 @@ describe('MERCHANT TEST CASES', function () {
             merchantTestHelper.disposeTestMerchantAccountByName(TEST_GET_MERCHANT_NAME);
         });
 
-        it('Return error when get merchant with invalid id', (done) => {
-            console.log(`/Merchants/abc?access_token=${accessToken}`);
+        it('Return error unauthorized when trying to get other merchant with valid id', (done) => {
             request(apiAddress)
                 .get(`/Merchants/abc?access_token=${accessToken}`)
                 .set('Accept', 'application/json')
                 .then(res => {
-                    expect(res).to.have.status(404);
+                    expect(res).to.have.status(401);
                     done();
                 })
                 .catch(err => {
                     expect(err).to.not.be.null;
-                    expect(err).to.have.status(404);
+                    expect(err).to.have.status(401);
                     done();
                 });
         });
-        
+
         it('Return ok when getting data with valid id', (done) => {
             request(apiAddress)
                 .get(`/Merchants/${merchantId}?access_token=${accessToken}`)
