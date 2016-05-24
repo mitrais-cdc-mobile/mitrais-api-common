@@ -75,7 +75,7 @@ describe('Create Merchant', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                nama: '',
+                name: '',
                 email: TEST_CREATE_MERCHANT_EMAIL,
                 merchantType: TEST_CREATE_MERCHANT_TYPE,
                 deliveryMethod: TEST_CREATE_MERCHANT_DELIVERY_METHOD
@@ -97,7 +97,7 @@ describe('Create Merchant', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                nama: TEST_CREATE_MERCHANT_NAME,
+                name: TEST_CREATE_MERCHANT_NAME,
                 email: '',
                 merchantType: TEST_CREATE_MERCHANT_TYPE,
                 deliveryMethod: TEST_CREATE_MERCHANT_DELIVERY_METHOD
@@ -119,7 +119,7 @@ describe('Create Merchant', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                nama: TEST_CREATE_MERCHANT_NAME,
+                name: TEST_CREATE_MERCHANT_NAME,
                 email: TEST_CREATE_MERCHANT_EMAIL,
                 merchantType: '',
                 deliveryMethod: TEST_CREATE_MERCHANT_DELIVERY_METHOD
@@ -141,7 +141,7 @@ describe('Create Merchant', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                nama: TEST_CREATE_MERCHANT_NAME,
+                name: TEST_CREATE_MERCHANT_NAME,
                 email: TEST_CREATE_MERCHANT_EMAIL,
                 merchantType: TEST_CREATE_MERCHANT_TYPE,
                 deliveryMethod: ''
@@ -163,7 +163,7 @@ describe('Create Merchant', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                nama: TEST_CREATE_MERCHANT_NAME,
+                name: TEST_CREATE_MERCHANT_NAME,
                 email: 'aaa',
                 merchantType: TEST_CREATE_MERCHANT_TYPE,
                 deliveryMethod: TEST_CREATE_MERCHANT_DELIVERY_METHOD
@@ -185,7 +185,7 @@ describe('Create Merchant', function () {
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .send({
-                nama: TEST_CREATE_MERCHANT_NAME,
+                name: TEST_CREATE_MERCHANT_NAME,
                 email: TEST_CREATE_MERCHANT_EMAIL,
                 merchantType: TEST_CREATE_MERCHANT_TYPE,
                 deliveryMethod: TEST_CREATE_MERCHANT_DELIVERY_METHOD,
