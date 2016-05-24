@@ -310,7 +310,7 @@ describe('MERCHANT TEST CASES', function () {
                 })
                 .then(res => {
                     expect(res).to.have.status(200);
-                    expect(res.email).to.equal("MERCHANT_EMAIL@GMAIL.COM");
+                    expect(res.body.email).to.equal("MERCHANT_EMAIL@GMAIL.COM");
                     done();
                 })
                 .catch(err => {
@@ -401,7 +401,7 @@ describe('MERCHANT TEST CASES', function () {
                 .catch(err => {
                     expect(err).to.not.be.null;
                     expect(err).to.have.status(404);
-                    done();
+                    done(err);
                 });
         });
         
@@ -412,7 +412,7 @@ describe('MERCHANT TEST CASES', function () {
                 .set('Accept', 'application/json')
                 .then(res => {
                     expect(res).to.have.status(200);
-                    expect(res.email).to.equal(TEST_GET_MERCHANT_EMAIL);
+                    expect(res.body.email).to.equal(TEST_GET_MERCHANT_EMAIL);
                     done();
                 })
                 .catch(err => {
