@@ -17,7 +17,7 @@ describe('MERCHANT TEST CASES', function () {
     /**
      * Tests suite related to create merchant's feature.
      */
-    describe('Create Merchant', function () {
+    describe.skip('Create Merchant', function () {
         this.timeout(20000);
 
         const TEST_CREATE_MERCHANT_USER_NAME = 'create_merchant_username';
@@ -207,7 +207,7 @@ describe('MERCHANT TEST CASES', function () {
     /**
      * Tests suite related to update merchant's feature.
      */
-    describe('Update Merchant', function () {
+    describe.skip('Update Merchant', function () {
         this.timeout(20000);
 
         const TEST_UPDATE_MERCHANT_USER_NAME = 'update_merchant_username';
@@ -390,9 +390,9 @@ describe('MERCHANT TEST CASES', function () {
         });
 
         it('Return error when get merchant with invalid id', (done) => {
-            let invalidId = 'abc';
+            console.log(`/Merchants/abc?access_token=${accessToken}`);
             request(apiAddress)
-                .get(`/Merchants/${invalidId}?access_token=${accessToken}`)
+                .get(`/Merchants/abc?access_token=${accessToken}`)
                 .set('Accept', 'application/json')
                 .then(res => {
                     expect(res).to.have.status(404);
@@ -418,6 +418,5 @@ describe('MERCHANT TEST CASES', function () {
                     done(err);
                 });
         });
-
     });
 });
