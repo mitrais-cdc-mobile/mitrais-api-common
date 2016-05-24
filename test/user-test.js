@@ -16,7 +16,7 @@ const TEST_USER_PASSWORD = 'username';
 const TEST_USER_EMAIL = 'userTest@gmail.com';
 const TEST_USER_ACCOUNT_TYPE = 'Customer';
 
-describe.skip('User test', function () {
+describe('User test', function () {
     /**
      * Tests suite related to Sign Up's feature.
      */

@@ -13,7 +13,6 @@ const expect = chai.expect;
 const request = chai.request;
 
 describe('MERCHANT TEST CASES', function () {
-
     /**
      * Tests suite related to create merchant's feature.
      */
@@ -266,13 +265,23 @@ describe('MERCHANT TEST CASES', function () {
     /**
      * Tests suite related to update merchant's feature.
      */
-    describe.skip('Update Merchant', function () {
-        this.timeout(20000);
+    describe('Update Merchant', function () {
+        this.timeout(30000);
 
         const TEST_UPDATE_MERCHANT_USER_NAME = 'update_merchant_username';
         const TEST_UPDATE_MERCHANT_USER_EMAIL = 'update_merchant_useremail@gmail.com';
         const TEST_UPDATE_MERCHANT_USER_PASSWORD = 'update_merchant_userpassword';
         const TEST_UPDATE_MERCHANT_ACCOUNT_TYPE = 'Merchant';
+
+        const TEST_UPDATE_MERCHANT_USER_NAME2 = 'update_merchant_username2';
+        const TEST_UPDATE_MERCHANT_USER_EMAIL2 = 'update_merchant_useremail2@gmail.com';
+        const TEST_UPDATE_MERCHANT_USER_PASSWORD2 = 'update_merchant_userpassword';
+        const TEST_UPDATE_MERCHANT_ACCOUNT_TYPE2 = 'Merchant';
+        
+        const TEST_UPDATE_CUSTOMER_USER_NAME = 'update_customer_username';
+        const TEST_UPDATE_CUSTOMER_USER_EMAIL = 'update_customer_useremail@gmail.com';
+        const TEST_UPDATE_CUSTOMER_USER_PASSWORD = 'update_customer_userpassword';
+        const TEST_UPDATE_CUSTOMER_ACCOUNT_TYPE = 'Customer';
 
         const TEST_UPDATE_MERCHANT_NAME = 'update_merchant_name';
         const TEST_UPDATE_MERCHANT_EMAIL = 'update_merchant_email@gmail.com';
@@ -282,8 +291,64 @@ describe('MERCHANT TEST CASES', function () {
         let merchantUserId = '';
         let accessToken = '';
         let merchantId = '';
+        let accessToken2 = '';
+        let customerAccessToken = '';
 
         before((done) => {
+            request(apiAddress)
+                .post('/users')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .send({
+                    email: TEST_UPDATE_CUSTOMER_USER_EMAIL,
+                    password: TEST_UPDATE_CUSTOMER_USER_PASSWORD,
+                    username: TEST_UPDATE_CUSTOMER_USER_NAME,
+                    accountType: TEST_UPDATE_CUSTOMER_ACCOUNT_TYPE
+                })
+                .then(res => {
+                    expect(res).to.have.status(200);
+                    expect(res.body.id).exist;
+                    userTestHelper.verifyTestUserAccount(res.body.id)
+                        .then(() => {
+                            userTestHelper.loginTestUserAccount(
+                                TEST_UPDATE_CUSTOMER_USER_NAME, TEST_UPDATE_CUSTOMER_USER_PASSWORD).then(token => {
+                                    customerAccessToken = token;
+                                }).catch(err => {
+                                    console.log(err);
+                                });
+                        });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            
+            request(apiAddress)
+                .post('/users')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .send({
+                    email: TEST_UPDATE_MERCHANT_USER_EMAIL2,
+                    password: TEST_UPDATE_MERCHANT_USER_PASSWORD2,
+                    username: TEST_UPDATE_MERCHANT_USER_NAME2,
+                    accountType: TEST_UPDATE_MERCHANT_ACCOUNT_TYPE2
+                })
+                .then(res => {
+                    expect(res).to.have.status(200);
+                    expect(res.body.id).exist;
+                    userTestHelper.verifyTestUserAccount(res.body.id)
+                        .then(() => {
+                            userTestHelper.loginTestUserAccount(
+                                TEST_UPDATE_MERCHANT_USER_NAME2, TEST_UPDATE_MERCHANT_USER_PASSWORD2).then(token => {
+                                    accessToken2 = token;
+                                }).catch(err => {
+                                    console.log(err);
+                                });
+                        });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
             request(apiAddress)
                 .post('/users')
                 .set('Content-Type', 'application/json')
@@ -292,7 +357,7 @@ describe('MERCHANT TEST CASES', function () {
                     email: TEST_UPDATE_MERCHANT_USER_EMAIL,
                     password: TEST_UPDATE_MERCHANT_USER_PASSWORD,
                     username: TEST_UPDATE_MERCHANT_USER_NAME,
-                    accountType: TEST_UPDATE_MERCHANT_USER_PASSWORD
+                    accountType: TEST_UPDATE_MERCHANT_ACCOUNT_TYPE
                 })
                 .then(res => {
                     expect(res).to.have.status(200);
@@ -328,6 +393,8 @@ describe('MERCHANT TEST CASES', function () {
 
         after(() => {
             userTestHelper.disposeTestUserAccount(TEST_UPDATE_MERCHANT_USER_NAME);
+            userTestHelper.disposeTestUserAccount(TEST_UPDATE_MERCHANT_USER_NAME2);
+            userTestHelper.disposeTestUserAccount(TEST_UPDATE_CUSTOMER_USER_NAME);
             userTestHelper.disposeRoleMappingById(merchantUserId);
             merchantTestHelper.disposeTestMerchantAccountByName(TEST_UPDATE_MERCHANT_NAME);
         });
@@ -377,12 +444,57 @@ describe('MERCHANT TEST CASES', function () {
                 });
         });
 
+        it('Return error when trying to update another data', (done) => {
+            request(apiAddress)
+                .put(`/Merchants/${merchantId}?access_token=${accessToken2}`)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .send({
+                    name: "TEST",
+                    email: "TEST@GMAIL.COM",
+                    merchantType: TEST_UPDATE_MERCHANT_TYPE,
+                    deliveryMethod: TEST_UPDATE_MERCHANT_DELIVERY_METHOD,
+                    userId: merchantUserId
+                })
+                .then(res => {
+                    expect(res).to.have.status(401);
+                    done();
+                })
+                .catch(err => {
+                    expect(err).to.not.be.null;
+                    expect(err).to.have.status(401);
+                    done();
+                });
+        });
+        
+        it('Return ok when updating with valid data', (done) => {
+            request(apiAddress)
+                .put(`/Merchants/${merchantId}?access_token=${customerAccessToken}`)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .send({
+                    name: TEST_UPDATE_MERCHANT_NAME,
+                    email: "MERCHANT_EMAIL@GMAIL.COM",
+                    merchantType: TEST_UPDATE_MERCHANT_TYPE,
+                    deliveryMethod: TEST_UPDATE_MERCHANT_DELIVERY_METHOD,
+                    userId: merchantUserId
+                })
+                .then(res => {
+                    expect(res).to.have.status(401);
+                    done();
+                })
+                .catch(err => {
+                    expect(err).to.not.be.null;
+                    expect(err).to.have.status(401);
+                    done();
+                });
+        });
     });
 
     /**
      * Tests suite related to get merchant's feature.
      */
-    describe.skip('Get Merchant', function () {
+    describe('Get Merchant', function () {
         this.timeout(50000);
 
         const TEST_GET_MERCHANT_USER_NAME = 'get_merchant_username';

@@ -64,6 +64,13 @@
       "principalType": "ROLE",
       "principalId": "MERCHANT",
       "permission": "ALLOW",
+      "properties": "updateAttributes"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "MERCHANT",
+      "permission": "ALLOW",
       "properties": "create"
     },
     {
