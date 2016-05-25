@@ -688,7 +688,7 @@ describe('User test', function () {
                     done(err);
                 });
                 
-                setTimeout(done, 30000);
+                setTimeout(done(), 30000);
         });
 
         after(() => {
