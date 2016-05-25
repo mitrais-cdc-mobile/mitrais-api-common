@@ -753,113 +753,102 @@ describe('User test', function () {
         });
 
         it('Return OK when using verified user with valid email and password', (done) => {
-            before((done) => {
-                // verified user        
-                request(apiAddress)
-                    .post('/users')
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .send({
-                        username: TEST_SIGNIN_VERIFIED_USER_NAME,
-                        email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
-                        password: TEST_SIGNIN_VERIFIED_USER_PASSWORD,
-                        accountType: TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE
-                    })
-                    .then(res => {
-                        expect(res).to.have.status(200);
-                        expect(res.body.id).exist;
-                        const userId = res.body.id;
-
-                        testHelper.verifyTestUserAccount(userId)
-                            .then(() => {
-                                done();
-                            })
-                            .catch(err => {
-                                console.log(`[ERROR] - In before method. Error = ${err}`);
-                                done(err);
-                            });
-                    })
-                    .catch(err => {
-                        console.log(`[ERROR] - In before method. Error = ${err}`);
-                        done(err);
-                    });
-            })
-
-            after(() => {
-                testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
-            })
-
             request(apiAddress)
-                .post('/users/login')
+                .post('/users')
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
                 .send({
+                    username: TEST_SIGNIN_VERIFIED_USER_NAME,
                     email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
-                    password: TEST_SIGNIN_VERIFIED_USER_PASSWORD
+                    password: TEST_SIGNIN_VERIFIED_USER_PASSWORD,
+                    accountType: TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE
                 })
                 .then(res => {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
-                    expect(res.body.userId).exist;
-                    done();
+                    const userId = res.body.id;
+
+                    testHelper.verifyTestUserAccount(userId)
+                        .then(() => {
+
+                            // login
+                            request(apiAddress)
+                                .post('/users/login')
+                                .set('Content-Type', 'application/json')
+                                .set('Accept', 'application/json')
+                                .send({
+                                    email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
+                                    password: TEST_SIGNIN_VERIFIED_USER_PASSWORD
+                                })
+                                .then(res => {
+                                    expect(res).to.have.status(200);
+                                    expect(res.body.id).exist;
+                                    expect(res.body.userId).exist;
+                                    testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
+                                    done();
+                                })
+                                .catch(err => {
+                                    console.log(`[ERROR] - In before method. Error = ${err}`);
+                                    done(err);
+                                });
+                        })
+                        .catch(err => {
+                            console.log(`[ERROR] - In before method. Error = ${err}`);
+                            done(err);
+                        });
                 })
                 .catch(err => {
+                    console.log(`[ERROR] - In before method. Error = ${err}`);
                     done(err);
                 });
         });
 
         it('Return OK when using verified user with valid username and password', (done) => {
-            before((done) => {
-                // verified user        
-                request(apiAddress)
-                    .post('/users')
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .send({
-                        username: TEST_SIGNIN_VERIFIED_USER_NAME,
-                        email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
-                        password: TEST_SIGNIN_VERIFIED_USER_PASSWORD,
-                        accountType: TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE
-                    })
-                    .then(res => {
-                        expect(res).to.have.status(200);
-                        expect(res.body.id).exist;
-                        const userId = res.body.id;
-
-                        testHelper.verifyTestUserAccount(userId)
-                            .then(() => {
-                                done();
-                            })
-                            .catch(err => {
-                                console.log(`[ERROR] - In before method. Error = ${err}`);
-                                done(err);
-                            });
-                    })
-                    .catch(err => {
-                        console.log(`[ERROR] - In before method. Error = ${err}`);
-                        done(err);
-                    });
-            })
-
-            after(() => {
-                testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
-            })
-            
             request(apiAddress)
-                .post('/users/login')
+                .post('/users')
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
                 .send({
                     username: TEST_SIGNIN_VERIFIED_USER_NAME,
-                    password: TEST_SIGNIN_VERIFIED_USER_PASSWORD
+                    email: TEST_SIGNIN_VERIFIED_USER_EMAIL,
+                    password: TEST_SIGNIN_VERIFIED_USER_PASSWORD,
+                    accountType: TEST_SIGNIN_VERIFIED_USER_ACCOUNT_TYPE
                 })
                 .then(res => {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
-                    expect(res.body.userId).exist;
-                    done();
+                    const userId = res.body.id;
+
+                    testHelper.verifyTestUserAccount(userId)
+                        .then(() => {
+
+                            // login
+                            request(apiAddress)
+                                .post('/users/login')
+                                .set('Content-Type', 'application/json')
+                                .set('Accept', 'application/json')
+                                .send({
+                                    username: TEST_SIGNIN_VERIFIED_USER_NAME,
+                                    password: TEST_SIGNIN_VERIFIED_USER_PASSWORD
+                                })
+                                .then(res => {
+                                    expect(res).to.have.status(200);
+                                    expect(res.body.id).exist;
+                                    expect(res.body.userId).exist;
+                                    done();
+                                })
+                                .catch(err => {
+                                    console.log(`[ERROR] - In before method. Error = ${err}`);
+                                    done(err);
+                                });
+                        })
+                        .catch(err => {
+                            console.log(`[ERROR] - In before method. Error = ${err}`);
+                            done(err);
+                        });
                 })
                 .catch(err => {
+                    console.log(`[ERROR] - In before method. Error = ${err}`);
                     done(err);
                 });
         });
