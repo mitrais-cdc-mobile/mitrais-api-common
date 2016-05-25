@@ -12,7 +12,7 @@ const merchantTestHelper = require('./merchant-test-helpers');
 const expect = chai.expect;
 const request = chai.request;
 
-describe('MERCHANT TEST CASES', function () {
+describe.skip('MERCHANT TEST CASES', function () {
     /**
      * Tests suite related to create merchant's feature.
      */
