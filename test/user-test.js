@@ -578,7 +578,7 @@ describe('User test', function () {
         let merchantVerifiedUserId = '';
         let merchantDataVerifiedUserId = '';
 
-        this.timeout(20000);
+        this.timeout(30000);
         before((done) => {
             // unverified user
             request(apiAddress)
@@ -641,19 +641,15 @@ describe('User test', function () {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
                     merchantVerifiedUserId = res.body.id;
-
                     testHelper.verifyTestUserAccount(merchantVerifiedUserId)
                         .then(() => {
-                            done();
                         })
                         .catch(err => {
                             console.log(`[ERROR] - In before method. Error = ${err}`);
-                            done(err);
                         });
                 })
                 .catch(err => {
                     console.log(`[ERROR] - In before method. Error = ${err}`);
-                    done(err);
                 });
 
             // verified user merchant with data 
@@ -677,6 +673,7 @@ describe('User test', function () {
                             testHelper.createTestMerchantAccount(merchantDataVerifiedUserId)
                                 .then(id => {
                                     merchantId = id;
+                                    done();
                                 }).catch(err => {
                                     console.log(`[ERROR] - In before method. Error = ${err}`);
                                     done(err);
@@ -804,6 +801,7 @@ describe('User test', function () {
         });
 
         it('Return OK when using verified user with valid username and password', (done) => {
+            
             request(apiAddress)
                 .post('/users/login')
                 .set('Content-Type', 'application/json')
