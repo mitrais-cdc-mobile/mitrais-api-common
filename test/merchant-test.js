@@ -307,15 +307,15 @@ describe('MERCHANT TEST CASES', function () {
                 .then(res => {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
-                    userTestHelper.verifyTestUserAccount(res.body.id)
-                        .then(() => {
-                            userTestHelper.loginTestUserAccount(
-                                TEST_UPDATE_CUSTOMER_USER_NAME, TEST_UPDATE_CUSTOMER_USER_PASSWORD).then(token => {
-                                    customerAccessToken = token;
-                                }).catch(err => {
-                                    console.log(err);
-                                });
+                    // userTestHelper.verifyTestUserAccount(res.body.id)
+                    //     .then(() => {
+                    userTestHelper.loginTestUserAccount(
+                        TEST_UPDATE_CUSTOMER_USER_NAME, TEST_UPDATE_CUSTOMER_USER_PASSWORD).then(token => {
+                            customerAccessToken = token;
+                        }).catch(err => {
+                            console.log(err);
                         });
+                    // });
                 })
                 .catch(err => {
                     console.log(err);
@@ -417,6 +417,51 @@ describe('MERCHANT TEST CASES', function () {
         });
 
         it('Return error when trying to update another data', (done) => {
+            // Do the test when 2nd test user has signed in
+            const on2ndTestUserLoggedIn = (authToken, done) => {
+                request(apiAddress)
+                    .put(`/Merchants/${merchantId}?access_token=${authToken}`)
+                    .set('Content-Type', 'application/json')
+                    .set('Accept', 'application/json')
+                    .send({
+                        name: "TEST",
+                        email: "TEST123@TEST.COM",
+                        merchantType: TEST_UPDATE_MERCHANT_TYPE,
+                        deliveryMethod: TEST_UPDATE_MERCHANT_DELIVERY_METHOD,
+                        userId: merchantUserId
+                    })
+                    .then(res => {
+                        expect(res).to.have.status(401);
+                        done();
+                    })
+                    .catch(err => {
+                        expect(err).to.not.be.null;
+                        expect(err).to.have.status(401);
+                        done();
+                    });
+            };
+
+            // Do sign in using 2nd test user
+            const doSignInUsing2ndTestUser = (userId, done) => {
+                request(apiAddress)
+                    .post('/users/login')
+                    .set('Content-Type', 'application/json')
+                    .set('Accept', 'application/json')
+                    .send({
+                        username: TEST_UPDATE_MERCHANT_USER_NAME2,
+                        password: TEST_UPDATE_MERCHANT_USER_PASSWORD2
+                    })
+                    .then(res => {
+                        const authToken = JSON.parse(res.text).id;
+                        on2ndTestUserLoggedIn(authToken, userId, done);
+                    })
+                    .catch(err => {
+                        console.log(`[DEBUG] - err of sign in = ${JSON.stringify(err)}`);
+                        done(err);
+                    });
+            };
+
+            // Signup 2nd test user through REST API
             request(apiAddress)
                 .post('/users')
                 .set('Content-Type', 'application/json')
@@ -430,38 +475,12 @@ describe('MERCHANT TEST CASES', function () {
                 .then(res => {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
-                    userTestHelper.verifyTestUserAccount(res.body.id)
-                        .then(() => {
-                            userTestHelper.loginTestUserAccount(
-                                TEST_UPDATE_MERCHANT_USER_NAME2, TEST_UPDATE_MERCHANT_USER_PASSWORD2).then(token => {
-                                    request(apiAddress)
-                                        .put(`/Merchants/${merchantId}?access_token=${token}`)
-                                        .set('Content-Type', 'application/json')
-                                        .set('Accept', 'application/json')
-                                        .send({
-                                            name: "TEST",
-                                            email: "TEST123@TEST.COM",
-                                            merchantType: TEST_UPDATE_MERCHANT_TYPE,
-                                            deliveryMethod: TEST_UPDATE_MERCHANT_DELIVERY_METHOD,
-                                            userId: merchantUserId
-                                        })
-                                        .then(res => {
-                                            expect(res).to.have.status(401);
-                                            done();
-                                        })
-                                        .catch(err => {
-                                            expect(err).to.not.be.null;
-                                            expect(err).to.have.status(401);
-                                            done();
-                                        });
-                                }).catch(err => {
-                                    console.log(err);
-                                    done(err);
-                                });
-                        });
+                    const userId = res.body.id;
+
+                    testHelper.verifyTestUserAccount(userId)
+                        .then(() => doSignInUsing2ndTestUser(userId, done));
                 })
                 .catch(err => {
-                    console.log(err);
                     done(err);
                 });
         });
