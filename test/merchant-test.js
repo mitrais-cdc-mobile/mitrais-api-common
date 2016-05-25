@@ -273,11 +273,6 @@ describe('MERCHANT TEST CASES', function () {
         const TEST_UPDATE_MERCHANT_USER_PASSWORD = 'update_merchant_userpassword';
         const TEST_UPDATE_MERCHANT_ACCOUNT_TYPE = 'Merchant';
 
-        const TEST_UPDATE_MERCHANT_USER_NAME2 = 'update_merchant_username2';
-        const TEST_UPDATE_MERCHANT_USER_EMAIL2 = 'update_merchant_useremail2@gmail.com';
-        const TEST_UPDATE_MERCHANT_USER_PASSWORD2 = 'update_merchant_userpassword';
-        const TEST_UPDATE_MERCHANT_ACCOUNT_TYPE2 = 'Merchant';
-
         const TEST_UPDATE_CUSTOMER_USER_NAME = 'update_customer_username';
         const TEST_UPDATE_CUSTOMER_USER_EMAIL = 'update_customer_useremail@gmail.com';
         const TEST_UPDATE_CUSTOMER_USER_PASSWORD = 'update_customer_userpassword';
@@ -335,28 +330,28 @@ describe('MERCHANT TEST CASES', function () {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
                     merchantUserId = res.body.id;
-
+                    
                     userTestHelper.verifyTestUserAccount(merchantUserId)
                         .then(() => {
-                            userTestHelper.loginTestUserAccount(
-                                TEST_UPDATE_MERCHANT_USER_NAME, TEST_UPDATE_MERCHANT_USER_PASSWORD).then(token => {
-                                    accessToken = token;
-                                    merchantTestHelper.createTestMerchantAccount(
-                                        TEST_UPDATE_MERCHANT_NAME,
-                                        TEST_UPDATE_MERCHANT_EMAIL,
-                                        TEST_UPDATE_MERCHANT_TYPE,
-                                        merchantUserId,
-                                        TEST_UPDATE_MERCHANT_DELIVERY_METHOD
-                                    ).then(id => {
-                                        merchantId = id;
-                                        done();
-                                    }).catch(err => {
-                                        done(err);
-                                    });
-                                }).catch(err => {
-                                    done(err);
-                                });
+                    userTestHelper.loginTestUserAccount(
+                        TEST_UPDATE_MERCHANT_USER_NAME, TEST_UPDATE_MERCHANT_USER_PASSWORD).then(token => {
+                            accessToken = token;
+                            merchantTestHelper.createTestMerchantAccount(
+                                TEST_UPDATE_MERCHANT_NAME,
+                                TEST_UPDATE_MERCHANT_EMAIL,
+                                TEST_UPDATE_MERCHANT_TYPE,
+                                merchantUserId,
+                                TEST_UPDATE_MERCHANT_DELIVERY_METHOD
+                            ).then(id => {
+                                merchantId = id;
+                                done();
+                            }).catch(err => {
+                                done(err);
+                            });
+                        }).catch(err => {
+                            done(err);
                         });
+                    });
                 })
                 .catch(err => {
                     done(err);
@@ -365,7 +360,6 @@ describe('MERCHANT TEST CASES', function () {
 
         after(() => {
             userTestHelper.disposeTestUserAccount(TEST_UPDATE_MERCHANT_USER_NAME);
-            userTestHelper.disposeTestUserAccount(TEST_UPDATE_MERCHANT_USER_NAME2);
             userTestHelper.disposeTestUserAccount(TEST_UPDATE_CUSTOMER_USER_NAME);
             userTestHelper.disposeRoleMappingById(merchantUserId);
             merchantTestHelper.disposeTestMerchantAccountByName(TEST_UPDATE_MERCHANT_NAME);
@@ -410,75 +404,6 @@ describe('MERCHANT TEST CASES', function () {
                     expect(res).to.have.status(200);
                     expect(res.body.email).to.equal("MERCHANT_EMAIL@GMAIL.COM");
                     done();
-                })
-                .catch(err => {
-                    done(err);
-                });
-        });
-
-        it('Return error when trying to update another data', (done) => {
-            // Do the test when 2nd test user has signed in
-            const on2ndTestUserLoggedIn = (authToken, done) => {
-                request(apiAddress)
-                    .put(`/Merchants/${merchantId}?access_token=${authToken}`)
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .send({
-                        name: "TEST",
-                        email: "TEST123@TEST.COM",
-                        merchantType: TEST_UPDATE_MERCHANT_TYPE,
-                        deliveryMethod: TEST_UPDATE_MERCHANT_DELIVERY_METHOD,
-                        userId: merchantUserId
-                    })
-                    .then(res => {
-                        expect(res).to.have.status(401);
-                        done();
-                    })
-                    .catch(err => {
-                        expect(err).to.not.be.null;
-                        expect(err).to.have.status(401);
-                        done();
-                    });
-            };
-
-            // Do sign in using 2nd test user
-            const doSignInUsing2ndTestUser = (userId, done) => {
-                request(apiAddress)
-                    .post('/users/login')
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .send({
-                        username: TEST_UPDATE_MERCHANT_USER_NAME2,
-                        password: TEST_UPDATE_MERCHANT_USER_PASSWORD2
-                    })
-                    .then(res => {
-                        const authToken = JSON.parse(res.text).id;
-                        on2ndTestUserLoggedIn(authToken, userId, done);
-                    })
-                    .catch(err => {
-                        console.log(`[DEBUG] - err of sign in = ${JSON.stringify(err)}`);
-                        done(err);
-                    });
-            };
-
-            // Signup 2nd test user through REST API
-            request(apiAddress)
-                .post('/users')
-                .set('Content-Type', 'application/json')
-                .set('Accept', 'application/json')
-                .send({
-                    email: TEST_UPDATE_MERCHANT_USER_EMAIL2,
-                    password: TEST_UPDATE_MERCHANT_USER_PASSWORD2,
-                    username: TEST_UPDATE_MERCHANT_USER_NAME2,
-                    accountType: TEST_UPDATE_MERCHANT_ACCOUNT_TYPE2
-                })
-                .then(res => {
-                    expect(res).to.have.status(200);
-                    expect(res.body.id).exist;
-                    const userId = res.body.id;
-
-                    userTestHelper.verifyTestUserAccount(userId)
-                        .then(() => doSignInUsing2ndTestUser(userId, done));
                 })
                 .catch(err => {
                     done(err);
