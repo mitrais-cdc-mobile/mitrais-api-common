@@ -477,7 +477,7 @@ describe('MERCHANT TEST CASES', function () {
                     expect(res.body.id).exist;
                     const userId = res.body.id;
 
-                    testHelper.verifyTestUserAccount(userId)
+                    userTestHelper.verifyTestUserAccount(userId)
                         .then(() => doSignInUsing2ndTestUser(userId, done));
                 })
                 .catch(err => {
@@ -559,12 +559,15 @@ describe('MERCHANT TEST CASES', function () {
                                         merchantId = id;
                                         done();
                                     }).catch(err => {
+                                        console.log(`[DEBUG] - err of sign in = ${JSON.stringify(err)}`);
                                         done(err);
                                     });
                                 }).catch(err => {
+                                    console.log(`[DEBUG] - err of sign in = ${JSON.stringify(err)}`);
                                     done(err);
                                 });
                         }).catch(err => {
+                            console.log(`[DEBUG] - err of sign in = ${JSON.stringify(err)}`);
                             done(err);
                         });
                 })
@@ -604,6 +607,7 @@ describe('MERCHANT TEST CASES', function () {
                     done();
                 })
                 .catch(err => {
+                    console.log(`[DEBUG] - getting data with valid id = ${JSON.stringify(err)}`);
                     done(err);
                 });
         });
