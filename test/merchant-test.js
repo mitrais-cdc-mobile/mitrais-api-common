@@ -307,15 +307,15 @@ describe('MERCHANT TEST CASES', function () {
                 .then(res => {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
-                    // userTestHelper.verifyTestUserAccount(res.body.id)
-                    //     .then(() => {
+                    userTestHelper.verifyTestUserAccount(res.body.id)
+                        .then(() => {
                     userTestHelper.loginTestUserAccount(
                         TEST_UPDATE_CUSTOMER_USER_NAME, TEST_UPDATE_CUSTOMER_USER_PASSWORD).then(token => {
                             customerAccessToken = token;
                         }).catch(err => {
                             console.log(err);
                         });
-                    // });
+                    });
                 })
                 .catch(err => {
                     console.log(err);
