@@ -246,7 +246,7 @@ describe('User test', function () {
         let testUserId = "";
 
         before((done) => {
-            this.timeout(10000);
+            this.timeout(20000);
             testHelper.createTestUserAccount(TEST_USER_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD, TEST_USER_ACCOUNT_TYPE)
                 .then(id => {
                     testUserId = id;
@@ -312,7 +312,7 @@ describe('User test', function () {
         });
 
         it("returns ok when unauthenticated user do sign up", function (done) {
-            this.timeout(10000);
+            this.timeout(20000);
             const email = 'mitraiscdcmobiledev@gmail.com';
 
             request(apiAddress)
