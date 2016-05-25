@@ -835,6 +835,7 @@ describe('User test', function () {
                                     expect(res).to.have.status(200);
                                     expect(res.body.id).exist;
                                     expect(res.body.userId).exist;
+                                    testHelper.disposeTestUserAccount(TEST_SIGNIN_VERIFIED_USER_NAME);
                                     done();
                                 })
                                 .catch(err => {
