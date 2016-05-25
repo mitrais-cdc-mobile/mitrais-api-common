@@ -673,7 +673,6 @@ describe('User test', function () {
                             testHelper.createTestMerchantAccount(merchantDataVerifiedUserId)
                                 .then(id => {
                                     merchantId = id;
-                                    done();
                                 }).catch(err => {
                                     console.log(`[ERROR] - In before method. Error = ${err}`);
                                     done(err);
@@ -688,6 +687,8 @@ describe('User test', function () {
                     console.log(`[ERROR] - In before method. Error = ${err}`);
                     done(err);
                 });
+                
+                setTimeout(done, 30000);
         });
 
         after(() => {
