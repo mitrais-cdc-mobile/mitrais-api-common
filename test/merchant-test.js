@@ -277,7 +277,7 @@ describe('MERCHANT TEST CASES', function () {
         const TEST_UPDATE_MERCHANT_USER_EMAIL2 = 'update_merchant_useremail2@gmail.com';
         const TEST_UPDATE_MERCHANT_USER_PASSWORD2 = 'update_merchant_userpassword';
         const TEST_UPDATE_MERCHANT_ACCOUNT_TYPE2 = 'Merchant';
-        
+
         const TEST_UPDATE_CUSTOMER_USER_NAME = 'update_customer_username';
         const TEST_UPDATE_CUSTOMER_USER_EMAIL = 'update_customer_useremail@gmail.com';
         const TEST_UPDATE_CUSTOMER_USER_PASSWORD = 'update_customer_userpassword';
@@ -291,7 +291,6 @@ describe('MERCHANT TEST CASES', function () {
         let merchantUserId = '';
         let accessToken = '';
         let merchantId = '';
-        let accessToken2 = '';
         let customerAccessToken = '';
 
         before((done) => {
@@ -313,33 +312,6 @@ describe('MERCHANT TEST CASES', function () {
                             userTestHelper.loginTestUserAccount(
                                 TEST_UPDATE_CUSTOMER_USER_NAME, TEST_UPDATE_CUSTOMER_USER_PASSWORD).then(token => {
                                     customerAccessToken = token;
-                                }).catch(err => {
-                                    console.log(err);
-                                });
-                        });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            
-            request(apiAddress)
-                .post('/users')
-                .set('Content-Type', 'application/json')
-                .set('Accept', 'application/json')
-                .send({
-                    email: TEST_UPDATE_MERCHANT_USER_EMAIL2,
-                    password: TEST_UPDATE_MERCHANT_USER_PASSWORD2,
-                    username: TEST_UPDATE_MERCHANT_USER_NAME2,
-                    accountType: TEST_UPDATE_MERCHANT_ACCOUNT_TYPE2
-                })
-                .then(res => {
-                    expect(res).to.have.status(200);
-                    expect(res.body.id).exist;
-                    userTestHelper.verifyTestUserAccount(res.body.id)
-                        .then(() => {
-                            userTestHelper.loginTestUserAccount(
-                                TEST_UPDATE_MERCHANT_USER_NAME2, TEST_UPDATE_MERCHANT_USER_PASSWORD2).then(token => {
-                                    accessToken2 = token;
                                 }).catch(err => {
                                     console.log(err);
                                 });
@@ -446,28 +418,55 @@ describe('MERCHANT TEST CASES', function () {
 
         it('Return error when trying to update another data', (done) => {
             request(apiAddress)
-                .put(`/Merchants/${merchantId}?access_token=${accessToken2}`)
+                .post('/users')
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
                 .send({
-                    name: "TEST",
-                    email: "TEST@GMAIL.COM",
-                    merchantType: TEST_UPDATE_MERCHANT_TYPE,
-                    deliveryMethod: TEST_UPDATE_MERCHANT_DELIVERY_METHOD,
-                    userId: merchantUserId
+                    email: TEST_UPDATE_MERCHANT_USER_EMAIL2,
+                    password: TEST_UPDATE_MERCHANT_USER_PASSWORD2,
+                    username: TEST_UPDATE_MERCHANT_USER_NAME2,
+                    accountType: TEST_UPDATE_MERCHANT_ACCOUNT_TYPE2
                 })
                 .then(res => {
-                    expect(res).to.have.status(401);
-                    done();
+                    expect(res).to.have.status(200);
+                    expect(res.body.id).exist;
+                    userTestHelper.verifyTestUserAccount(res.body.id)
+                        .then(() => {
+                            userTestHelper.loginTestUserAccount(
+                                TEST_UPDATE_MERCHANT_USER_NAME2, TEST_UPDATE_MERCHANT_USER_PASSWORD2).then(token => {
+                                    request(apiAddress)
+                                        .put(`/Merchants/${merchantId}?access_token=${token}`)
+                                        .set('Content-Type', 'application/json')
+                                        .set('Accept', 'application/json')
+                                        .send({
+                                            name: "TEST",
+                                            email: "TEST123@TEST.COM",
+                                            merchantType: TEST_UPDATE_MERCHANT_TYPE,
+                                            deliveryMethod: TEST_UPDATE_MERCHANT_DELIVERY_METHOD,
+                                            userId: merchantUserId
+                                        })
+                                        .then(res => {
+                                            expect(res).to.have.status(401);
+                                            done();
+                                        })
+                                        .catch(err => {
+                                            expect(err).to.not.be.null;
+                                            expect(err).to.have.status(401);
+                                            done();
+                                        });
+                                }).catch(err => {
+                                    console.log(err);
+                                    done(err);
+                                });
+                        });
                 })
                 .catch(err => {
-                    expect(err).to.not.be.null;
-                    expect(err).to.have.status(401);
-                    done();
+                    console.log(err);
+                    done(err);
                 });
         });
-        
-        it('Return ok when updating with valid data', (done) => {
+
+        it('Return error when updating with customer account', (done) => {
             request(apiAddress)
                 .put(`/Merchants/${merchantId}?access_token=${customerAccessToken}`)
                 .set('Content-Type', 'application/json')
