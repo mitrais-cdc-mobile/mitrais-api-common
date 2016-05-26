@@ -1,5 +1,7 @@
 "use strict"
 
+var config = require('../../server/config.json');
+
 module.exports = (user) => {
     const userHelper = require('../utility/user-helper');
 
@@ -26,5 +28,21 @@ module.exports = (user) => {
         } else {
             next()
         };
+    });
+
+    //send password reset link when requested
+    user.on('resetPasswordRequest', function (info) {
+        var url = 'http://' + config.host + ':' + config.port + '/reset-password';
+        var html = 'Click <a href="' + url + '?access_token=' +
+            info.accessToken.id + '">here</a> to reset your password';
+        user.app.models.Email.send({
+            to: info.email,
+            from: info.email,
+            subject: 'Password reset',
+            html: html
+        }, function (err) {
+            if (err) 
+            return console.log('>error sending password reset email, sending password reset email to:', info.email, err);
+        });
     });
 };

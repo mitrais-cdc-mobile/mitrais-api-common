@@ -41,7 +41,7 @@
     }
   },
   "Email": {
-    "dataSource": "elasticemail",
+    "dataSource": "gmail",
     "public": false
   }
 }

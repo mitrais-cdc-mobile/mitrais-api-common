@@ -20,7 +20,7 @@
     "name": "mitmart-testing",
     "user": "",
     "connector": "mongodb"
-  },  
+  },
   "elasticemail": {
     "name": "elasticemail",
     "connector": "mail",
@@ -35,6 +35,21 @@
           "pass": "a6c7493c-13f4-4121-a300-f120a99f0f79"
         }
       }
+    ]
+  },
+  "gmail": {
+    "defaultForType": "mail",
+    "connector": "mail",
+    "transports": [ {
+           "type": "SMTP",
+           "host": "smtp.gmail.com", 
+           "secureConnection": true, 
+           "port": 465, 
+           "auth": {
+               "user": "yoyo.strongloop@gmail.com",
+               "pass": "12345zxcvbnm"
+           }
+       }
     ]
   }
 }
