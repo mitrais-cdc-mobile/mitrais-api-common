@@ -17,12 +17,28 @@ module.exports = (user) => {
      * Send a verification email after registration 
      */
     user.afterRemote('create', (context, userInstance, next) => {
+        if (userInstance.__data.accountType == 'Merchant') {
+            userHelper.assignMerchantRole(userInstance.__data.id);
+        }
+
         if ((userInstance.__data) && (userInstance.__data.email) && (userInstance.__data.accountType)) {
             if ((process.env.MITMART_SIGNUP_AUTOVERIFICATION) && (process.env.MITMART_SIGNUP_AUTOVERIFICATION == "true")) {
                 userHelper.autoVerify(userInstance, next);
             } else {
                 userHelper.sendVerificationEmail(userInstance, next);
             }
+        } else {
+            next()
+        };
+    });
+
+    /**
+     * Check after login 
+     */
+    user.afterRemote('login', (context, userInstance, next) => {
+        if (userInstance.__data && userInstance.__data.userId) {
+            let userId = userInstance.__data.userId.toHexString();
+            userHelper.checkUserMerchant(userId, context, next)
         } else {
             next()
         };
