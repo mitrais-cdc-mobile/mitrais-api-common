@@ -36,20 +36,5 @@
         }
       }
     ]
-  },
-  "gmail": {
-    "defaultForType": "mail",
-    "connector": "mail",
-    "transports": [ {
-           "type": "SMTP",
-           "host": "smtp.gmail.com", 
-           "secureConnection": true, 
-           "port": 465, 
-           "auth": {
-               "user": "yoyo.strongloop@gmail.com",
-               "pass": "12345zxcvbnm"
-           }
-       }
-    ]
   }
 }
