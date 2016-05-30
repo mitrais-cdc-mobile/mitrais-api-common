@@ -53,6 +53,7 @@ class UserTestHelpers {
         return new Promise((resolve, reject) => {
             let user = app.models.User;
             user.findById(userId, { fields: { verificationToken: true } }, (err, instance) => {
+                if (err) reject(err);
                 const verificationToken = instance.verificationToken;
                 if (verificationToken) {
                     user.confirm(userId, verificationToken, '/verified', error => {

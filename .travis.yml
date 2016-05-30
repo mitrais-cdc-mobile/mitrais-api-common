@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - "4"
+env: NODE_ENV=testing
+install:
+  - npm install strongloop mocha
+  - npm install
+branches:
+  only:
+    - travis
+cache:
+  directories:
+  - node_modules
