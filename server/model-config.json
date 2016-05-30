@@ -43,5 +43,9 @@
   "Email": {
     "dataSource": "elasticemail",
     "public": false
+  },
+  "Merchant": {
+    "dataSource": "mitmart",
+    "public": true
   }
 }

@@ -26,5 +26,9 @@
     "options": {
       "emailVerificationRequired": true
     }
+  },
+  "Merchant": {
+    "dataSource": "mitmart-testing",
+    "public": true
   }
 }

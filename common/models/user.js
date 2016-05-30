@@ -20,6 +20,10 @@ module.exports = (user) => {
      * Send a verification email after registration 
      */
     user.afterRemote('create', (context, userInstance, next) => {
+        if (userInstance.__data.accountType == 'Merchant') {
+            userHelper.assignMerchantRole(userInstance.__data.id);
+        }
+
         if ((userInstance.__data) && (userInstance.__data.email) && (userInstance.__data.accountType)) {
             if ((process.env.MITMART_SIGNUP_AUTOVERIFICATION) && (process.env.MITMART_SIGNUP_AUTOVERIFICATION == "true")) {
                 userHelper.autoVerify(userInstance, next);
@@ -31,11 +35,11 @@ module.exports = (user) => {
         };
     });
 
-    //reset the user's password
+    /** reset the user's password */
     user.beforeRemote('generateNewPassword', function (context, userInstance, next) {
         try {
             var accessToken = app.models.AccessToken;
-            
+
             //check whether there is accessToken header or not
             if (!context.req.query.accessToken) {
                 return context.res.sendStatus(401);
@@ -106,7 +110,7 @@ module.exports = (user) => {
         }
     });
 
-    //send password reset link when requested
+    /** send password reset link when requested  */
     user.on('resetPasswordRequest', function (info) {
         var url = 'http://' + config.host + ':' + config.port + '/api/users/generateNewPassword';
 
@@ -119,11 +123,11 @@ module.exports = (user) => {
             html: html
         }, function (err) {
             if (err)
-                return console.log('>error sending password reset email, sending password reset email to: ', info.email, ' error:' , err);
+                return console.log('>error sending password reset email, sending password reset email to: ', info.email, ' error:', err);
         });
     });
 
-    // create new method generate new password
+    /** create new method generate new password */ 
     user.remoteMethod('generateNewPassword', {
         description: 'Generate New Password',
         accepts: [
@@ -132,7 +136,16 @@ module.exports = (user) => {
         http: { verb: 'get' }
     }
     );
+
+    /**
+    * Check after login 
+    */
+    user.afterRemote('login', (context, userInstance, next) => {
+        if (userInstance.__data && userInstance.__data.userId) {
+            let userId = userInstance.__data.userId.toHexString();
+            userHelper.checkUserMerchant(userId, context, next)
+        } else {
+            next()
+        };
+    }); 
 };
-
-
-

@@ -80,6 +80,50 @@ class UserTestHelpers {
                 });
         });
     };
+
+    static createTestMerchantAccount(userId) {
+        return new Promise((resolve, reject) => {
+            let merchant = app.models.Merchant;
+            const createRequest = { 
+                userId: userId,
+                name: 'merchant',
+                email: 'abc@gmail.com',
+                merchantType: 'merchantType',
+                deliveryMethod: 'deliveryMethod'
+             };
+            merchant.create(createRequest,
+                (err, res) => {
+                    if (err) reject(err);
+
+                    const merchantId = res.id;
+                    resolve(merchantId);
+                });
+        });
+    };
+
+    /**
+     * dispose test merchant account by id
+     */
+    static disposeTestMerchantAccountById(id) {
+        let Merchant = app.models.Merchant;
+
+        Merchant.destroyAll({ 'id': id },
+            (err, obj, count) => {
+                if (err) throw err;
+            });
+    }
+    
+    /**
+     * dispose role mapping by id
+     */
+    static disposeRoleMappingById(id) {
+        let RoleMapping = app.models.RoleMapping;
+
+        RoleMapping.destroyAll({ 'principalId': id },
+            (err, obj, count) => {
+                if (err) throw err;
+            });
+    }
 };
 
 module.exports = UserTestHelpers;

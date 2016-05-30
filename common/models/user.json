@@ -20,7 +20,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "merchants": {
+      "type": "hasOne",
+      "model": "Merchant",
+      "foreignKey": ""
+    }
+  },
   "acls": [
     {
       "principalType": "ROLE",
@@ -69,11 +75,11 @@
       "property": "logout"
     },
     {
+      "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
-      "property": "resetPassword",
-      "accessType": "EXECUTE"
+      "property": "resetPassword"
     },
     {
       "principalType": "ROLE",
