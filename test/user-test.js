@@ -1008,4 +1008,127 @@ describe('User test', function () {
                 });
         });
     });
+
+    describe('Reset Password', function () {
+        this.timeout(20000);
+
+        const TEST_RESET_VERIFIED_USER_NAME = 'reset_verified_username';
+        const TEST_RESET_VERIFIED_USER_EMAIL = 'reset_pasword_verified_useremail@gmail.com';
+        const TEST_RESET_VERIFIED_USER_INVALID_EMAIL = 'reset_invalid_useremail@gmail.com';
+        const TEST_RESET_VERIFIED_USER_PASSWORD = 'reset_verified_userpassword';
+        const TEST_RESET_VERIFIED_USER_ACCOUNT_TYPE = 'Merchant';
+        const TEST_GENERATE_PASSWORD_INVALID_ACCESS_TOKEN = "654321"
+
+        let accessToken = '';
+
+        before((done) => {
+            const doLogin = (done) => {
+                testHelper.loginTestUserAccount(TEST_RESET_VERIFIED_USER_NAME, TEST_RESET_VERIFIED_USER_PASSWORD)
+                    .then(token => {
+                        accessToken = token;
+                        done();
+                    })
+                    .catch(err => {
+                        console.log(`[ERROR] - In before method. Error = ${err}`)
+                        done(err);
+                    });
+            }
+
+            // verified user        
+            request(apiAddress)
+                .post('/users')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .send({
+                    username: TEST_RESET_VERIFIED_USER_NAME,
+                    email: TEST_RESET_VERIFIED_USER_EMAIL,
+                    password: TEST_RESET_VERIFIED_USER_PASSWORD,
+                    accountType: TEST_RESET_VERIFIED_USER_ACCOUNT_TYPE
+                })
+                .then(res => {
+                    expect(res).to.have.status(200);
+                    expect(res.body.id).exist;
+                    const userId = res.body.id;
+
+                    testHelper.verifyTestUserAccount(userId)
+                        .then(() => {
+                            doLogin(done);
+                        })
+                        .catch(err => {
+                            done(err);
+                        });
+                })
+                .catch(err => {
+                    done(err);
+                });
+        });
+
+        after(() => {
+            testHelper.disposeTestUserAccount(TEST_RESET_VERIFIED_USER_NAME);
+        });
+
+        it("Return token for reset password if user send valid email", (done) => {
+            request(apiAddress)
+                .post('/users/reset')
+                // send JSON Format
+                .send({ email: TEST_RESET_VERIFIED_USER_EMAIL })
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .then(res => {
+                    expect(res).to.not.be.null;
+                    expect(res).to.have.status(204);
+                    done();
+                })
+                .catch(err => {
+                    done(err);
+                });
+        });
+
+        it("Return error for reset password if user send invalid email", (done) => {
+            request(apiAddress)
+                .post('/users/reset')
+                // send JSON Format
+                .send({ email: TEST_RESET_VERIFIED_USER_INVALID_EMAIL })
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .then(res => {
+                    // do nothing
+                    done();
+                })
+                .catch(err => {
+                    expect(err).to.have.status(404);
+                    done();
+                });
+        });
+
+        it("Return generated token if reset token password is invalid", (done) => {
+            request(apiAddress)
+                .get('/users/generateNewPassword?accessToken=' + accessToken)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .then(res => {
+                    expect(res).to.not.be.null;
+                    expect(res).to.have.status(200);
+                    done();
+                })
+                .catch(err => {
+                    done(err);
+                });
+        });
+
+        it("Return error generated token if reset token password is invalid", (done) => {
+            request(apiAddress)
+                .get('/users/generateNewPassword?accessToken=' + TEST_GENERATE_PASSWORD_INVALID_ACCESS_TOKEN)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .then(res => {
+                    done();
+                })
+                .catch(err => {
+                    expect(err).to.have.status(401);
+                    done();
+                });
+        });
+
+    });
 });
