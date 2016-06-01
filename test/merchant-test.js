@@ -53,6 +53,7 @@ describe('MERCHANT TEST CASES', function () {
                 .then(res => {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
+                    console.log("Create Merchant " + res.body.id);
 
                     userTestHelper.verifyTestUserAccount(res.body.id)
                         .then(() => {
@@ -82,6 +83,7 @@ describe('MERCHANT TEST CASES', function () {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
                     merchantUserId = res.body.id;
+                    console.log("merchantUserId " + merchantUserId);
 
                     userTestHelper.verifyTestUserAccount(merchantUserId)
                         .then(() => {
