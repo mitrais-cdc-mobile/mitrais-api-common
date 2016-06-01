@@ -2,6 +2,8 @@ language: node_js
 node_js:
   - "4"
 env: NODE_ENV=testing
+services:
+  - mongodb
 install:
   - npm install strongloop mocha
   - npm install
@@ -11,3 +13,5 @@ branches:
 cache:
   directories:
   - node_modules
+ before_script:
+  - sleep 15
