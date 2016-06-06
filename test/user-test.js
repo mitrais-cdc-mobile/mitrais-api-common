@@ -46,6 +46,7 @@ describe('User test', function () {
                     accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
                 })
                 .then(res => {
+                    console.log("before res= " + res.body);
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
                 })
@@ -71,6 +72,7 @@ describe('User test', function () {
                     accountType: TEST_SIGNUP_USER_ACCOUNT_TYPE
                 })
                 .then(res => {
+                    console.log("res= " + res);
                     expect(res).to.have.status(422);
                     done();
                 })
@@ -94,6 +96,7 @@ describe('User test', function () {
                 })
                 .then(res => {
                     expect(res).to.have.status(422);
+                    console.log("res= " + res);
                     done();
                 })
                 .catch(err => {
@@ -421,6 +424,7 @@ describe('User test', function () {
                         expect(res).to.have.status(200);
                         expect(res.body.id).exits;
                         expect(res.body.id).to.be.equals(userId);
+                        console.log("on2ndTestUserLoggedIn " + res.body.id);
                         // Update user's info test
                         const updateApiPath = `/users/${userId}`;
                         request(apiAddress)
@@ -433,6 +437,7 @@ describe('User test', function () {
                             .end((err, res) => {
                                 expect(err).to.be.null;
                                 expect(res).to.have.status(200);
+                                console.log("on2ndTestUserLoggedIn updateApiPath err= " + err);
                                 testHelper.disposeTestUserAccountById(userId);
                                 done();
                             });
@@ -451,6 +456,7 @@ describe('User test', function () {
                     })
                     .then(res => {
                         const authToken = JSON.parse(res.text).id;
+                        console.log("doSignInUsing2ndTestUser" + userId + " authToken= " + authToken);
                         on2ndTestUserLoggedIn(authToken, userId, done);
                     })
                     .catch(err => {
@@ -474,11 +480,13 @@ describe('User test', function () {
                     expect(res).to.have.status(200);
                     expect(res.body.id).exist;
                     const userId = res.body.id;
+                    console.log("res.body" + res.body);
 
                     testHelper.verifyTestUserAccount(userId)
                         .then(() => doSignInUsing2ndTestUser(userId, done));
                 })
                 .catch(err => {
+                    console.log("err" + err);
                     done(err);
                 });
 
