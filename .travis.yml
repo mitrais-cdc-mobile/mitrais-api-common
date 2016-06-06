@@ -14,5 +14,3 @@ cache:
   - node_modules
 before_script:
   - sleep 15
-script:
-  - slc run

@@ -5,6 +5,7 @@
   "scripts": {
     "start": "slc run",
     "setenv": "export NODE_ENV=testing",
+    "pretest": "slc run",
     "test": "mocha",
     "unsetenv": "unset NODE_ENV",
     "posttest": "nsp check && kill $(ps -ax | grep 'sl-run.js --no-detach .' | awk '{print $1}') && npm run unsetenv"
