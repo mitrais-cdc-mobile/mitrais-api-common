@@ -6,7 +6,6 @@ services:
   - mongodb
 install:
   - npm install strongloop mocha
-  - npm install
 branches:
   only:
     - travis
@@ -15,4 +14,3 @@ cache:
   - node_modules
 before_script:
   - sleep 15
-  - npm start
