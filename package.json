@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server/server.js",
   "scripts": {
-    "start": "node .",
+    "start": "slc run",
     "setenv": "export NODE_ENV=testing",
     "test": "mocha",
     "unsetenv": "unset NODE_ENV",
